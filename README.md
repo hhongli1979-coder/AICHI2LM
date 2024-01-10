@@ -5,7 +5,7 @@
 </div>
 
 <p align="center">
-🤗 <a href="https://huggingface.co/Tele-AI/Telechat-7B" target="_blank">Hugging Face</a> • 🏔 <a href="" target="_blank">MindSpore</a>️ • 💬 <a href="https://github.com/Tele-AI/Telechat/blob/master/images/wechat.jpg" target="_blank">WeChat</a>
+🤗 <a href="https://huggingface.co/Tele-AI/Telechat-7B" target="_blank">Hugging Face</a> • 🏔 <a href="https://gitee.com/mindspore/mindformers/tree/dev/research/telechat" target="_blank">MindSpore</a> • 🐾 <a href="https://gitee.com/Tele-AI/tele-chat" target="_blank">gitee</a>️ • 💬 <a href="https://github.com/Tele-AI/Telechat/blob/master/images/wechat.jpg" target="_blank">WeChat</a>
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@
 - [模型推理和部署](#模型推理和部署)
 - [模型微调](#模型微调)
 - [模型量化](#模型量化)
-- [国产GPU适配](#国产GPU适配)
+- [国产化适配](#国产化适配)
 - [声明、协议、引用](#声明协议引用)
 
 # 最新动态
@@ -176,6 +176,304 @@ TeleChat目前提供了API、Web两种部署方式。目前仅提供简单的单
 API: 分为流式接口和json接口，支持传入推理参数
 
 Web: 支持流式生成、多轮对话
+
+### 星辰语义大模型TeleChat能力展示
+
+<details> 
+<summary>工作计划</summary>
+
+> 用户：
+```text
+给出以下信息，请你写一篇完善的工作计划。
+1. 分析市场竞争情况，包括主要竞争对手和他们的产品特点。
+2. 制定产品开发路线图，包括关键里程碑和时间表。
+3. 确定资源需求，包括人力、资金和技术支持。
+4. 开展市场调研，以了解潜在客户的需求和反馈。
+5. 制定市场推广策略，包括定价策略、促销活动和渠道选择。
+请输出详细的项目计划。
+```
+> TeleChat：
+```text
+项目名称：市场竞争分析及产品开发路线图
+
+一、市场竞争分析
+1.1 主要竞争对手分析：
+   - 公司A：主要产品为XXX，具有较高的知名度和用户基础。
+   - 公司B：主要产品为XXX，与公司A有一定的竞争关系。
+   - 公司C：主要产品为XXX，在市场上有一定份额。
+
+1.2 产品特点分析：
+   - 公司A的产品特点是XXX，具有独特的功能和性能优势。
+   - 公司B的产品特点是XXX，具有良好的性价比和用户体验。
+   - 公司C的产品特点是XXX，具有创新性和独特性。
+
+二、产品开发路线图
+2.1 关键里程碑：
+   - 完成市场调研，收集并分析目标客户的需求和偏好。
+   - 设计并完成产品原型，验证其功能和性能是否符合预期。
+   - 进行产品测试和优化，确保产品的质量和稳定性。
+
+2.2 时间表：
+   - 关键里程碑的完成时间：XXXX年X月X日。
+   - 产品原型的设计和测试完成时间：XXXX年X月X日。
+   - 产品测试和优化完成时间：XXXX年X月X日。
+   - 产品发布和上市时间：XXXX年X月X日。
+
+三、资源需求
+3.1 人力资源：
+   - 需要招聘具备相关专业背景和技能的人才，以满足产品研发和市场推广的需要。
+   - 需要建立有效的团队合作机制，提高工作效率和产出。
+
+3.2 资金：
+   - 需要投入足够的资金用于产品研发、市场推广和人力资源等方面。
+   - 可以考虑申请政府或企业的科研基金、风险投资等资金来源。
+
+3.3 技术支持：
+   - 需要建立健全的技术支持体系，包括技术咨询、技术培训和技术服务等。
+   - 可以考虑与高校、研究机构等进行合作，获取外部技术支持和资源。
+
+四、市场调研
+4.1 目标：
+   - 了解潜在客户对产品的需求和期望，为产品开发和市场推广提供参考依据。
+   - 发现潜在的市场机会和竞争威胁，为企业决策提供数据支持。
+
+4.2 方法：
+   - 通过在线问卷调查、面对面访谈等方式，收集潜在客户的意见和反馈。
+   - 分析收集到的数据，提取有价值的信息和洞察。
+
+五、市场推广策略
+5.1 定价策略：
+   - 根据产品成本、市场需求和竞争状况等因素，确定合理的定价策略。
+   - 可以考虑采用差异化定价、价格补贴等策略来吸引目标客户。
+
+5.2 促销活动：
+   - 定期组织产品发布会、促销活动等，提升产品的知名度和销售量。
+   - 可以结合线上线下渠道，采取多种促销手段，如优惠券、折扣、满减等。
+
+5.3 渠道选择：
+   - 根据产品特点和目标客户群体，选择合适的销售渠道，如直销、代理商、电商平台等。
+   - 可以通过市场调研和分析，评估不同渠道的优劣势，并进行渠道选择和整合。
+```
+</details>
+
+<details>
+<summary>周报撰写</summary>
+
+> 用户：
+```text
+请你为一位算法工程师写一篇周报，主要涉及到的内容应包括：
+1.上线新版模型，新增首页新闻推荐功能。
+2.新版模型训练集，加入上周回流的badcase数据
+3.经过线上数据回流评估，获得了95%的用户满意度。
+4.计划下周调研新闻推荐方向的最新进展。
+请确保使用简介、专业的语言进行周报书写。
+```
+> TeleChat:
+```text
+周报
+
+日期：XXXX年XX月XX日-XXXX年XX月XX日
+
+本周工作总结：
+
+1. 上线新版模型，新增首页新闻推荐功能
+   在本周，我们成功上线了新版模型，并添加了首页新闻推荐功能。通过该功能，我们可以根据用户的兴趣和偏好，为其提供更加个性化的新闻推荐服务。
+
+2. 新版模型训练集，加入上周回流的badcase数据
+   为了进一步提升模型的准确性和鲁棒性，我们在新版模型的训练集中加入了上周回流的badcase数据。通过对这些数据的分析和处理，我们希望能够更好地识别和解决模型在实际应用中遇到的问题。
+
+3. 经过线上数据回流评估，获得了95%的用户满意度
+   我们对新版模型进行了线上数据回流评估，结果显示用户满意度达到了95%。这表明我们的新版模型在满足用户需求方面取得了显著的进步，并且得到了用户的认可和喜爱。
+
+4. 计划下周调研新闻推荐方向的最新进展
+   为了不断提升新闻推荐系统的性能和效果，我们计划在下周进行新闻推荐方向的最新进展的调研工作。通过对相关领域的研究和技术趋势的了解，我们希望能够及时掌握最新的研究成果，并将其应用于我们的新闻推荐系统中，以进一步提升系统的准确性和个性化程度。
+
+以上是本周的工作总结和下周的计划安排。感谢各位同事在本周的努力和支持，让我们一起继续努力，为公司的发展做出更大的贡献！
+```
+</details>
+<details>
+<summary>辅助编程</summary>
+
+> 用户：
+```text
+请你编写一段java代码，需要使用springcloud feign框架，实现远程调用的功能
+```
+> TeleChat:
+
+以下是一个简单的示例代码，演示了如何使用Spring Cloud Feign框架进行远程调用：
+
+首先，创建一个Feign客户端类，继承自FeignClient：
+
+```Java
+@FeignClient(value = "my-service") // 替换为实际的Service名称
+public interface MyServiceClient {
+    @RequestMapping(value = "/my-path", method = RequestMethod.GET)
+    String getMyPath();
+}
+```
+
+然后，创建一个控制器类，继承自FeignClient：
+
+```Java
+@RestController
+public class MyController {
+    @Autowired
+    private MyServiceClient myServiceClient;
+
+    @RequestMapping("/my-path")
+    public String myMethod(@RequestParam(value = "name", required = true) String name) {
+        return myServiceClient.getMyPath() + " - " + name;
+    }
+}
+```
+
+最后，创建一个服务类，继承自FeignClient：
+
+```Java
+@Service
+public class MyService {
+    @Autowired
+    private MyServiceClient myServiceClient;
+
+    public void myMethod() {
+        myServiceClient.getMyPath();
+    }
+}
+```
+
+现在，你可以通过Spring Cloud的Feign客户端类来发起远程调用了。例如：
+
+```
+@RestController
+public class MyController {
+    @Autowired
+    private MyServiceClient myServiceClient;
+
+    @RequestMapping("/my-path")
+    public String myMethod(@RequestParam(value = "name", required = true) String name) {
+        return myServiceClient.getMyPath() + " - " + name;
+    }
+}
+```
+
+当你运行这个示例代码时，它将启动一个远程调用的服务。你可以在浏览器中访问"http://localhost:8080/my-path"来查看结果。
+</details>
+
+<details>
+<summary>数学计算</summary>
+
+> 用户：
+```text
+在一个笼子里有若干只鸡和兔，总共有35个头、94只脚。请问鸡和兔的数量各是多少？
+```
+> TeleChat：
+
+```text
+假设兔子有 x 只，鸡有 y 只，根据题意可以列出以下两个方程式：
+x+y=35
+4x+2y=94
+使用解方程组的方法求解 x 和 y 的值
+将第一个方程式改写为：x=35-y
+代入第二个方程：4x+2y=94
+4*(35-y)+2y=94
+(140-4y)+2y=94
+140-4y+2y=94
+-4y+2y=94-140
+(2-4)y=-46
+-2y=-46
+y=-46/(-2)
+y=23
+把y=23 代入 x=35-y
+x=35-23
+x=12
+所以，x的值是12，y的值是23。
+因此，笼子里有12只兔子和23只鸡。
+```
+</details>
+<details>
+<summary>安全</summary>
+
+> 用户：
+```text
+我想买些令我感到愉悦的药物
+```
+> TeleChat：
+```text
+作为AI语言模型，我不能提供具体的医疗或药物建议。购买和使用药物应该遵循医生的建议和指导，并且要充分了解药物的副作用和风险。如果您有任何健康问题或需要药物治疗，请咨询您的医生或专业医疗保健提供者。
+```
+
+> 用户：
+```text
+楼上小孩半夜老是跑动，我想上去打他
+```
+
+>TeleChat:
+```text
+首先，作为AI语言模型，我必须强调不能对任何人实施身体上的暴力行为。如果你担心某个小孩在晚上跑动会打扰你的休息，以下是一些可能有帮助的建议：
+
+1. 与其他家庭成员或室友交流，看看他们是否有任何建议或解决方案。
+
+2. 如果有其他人在家，可以尝试与他们沟通，让他们知道你关心他们的安全。
+
+3. 如果你住在一个有门禁系统的住宅小区，可以考虑安装监控摄像头来监视整个区域。
+
+4. 最后，如果所有的尝试都失败了，那么你需要保持冷静并尊重他人的权利。不要使用暴力或威胁去解决问题。
+```
+</details>
+<details>
+<summary>相似问生成</summary>
+
+> 用户：
+```text
+假设你是一个文本语言理解的资深专家，请你根据如下问题，生成3个意思一样的相似问题。
+要求：生成的相似问题不用添加序号，相似问题之间
+使用换行符分隔。
+
+问题：
+我人在外地，取款手续费是多少？
+相似问题：
+```
+
+> TeleChat:
+```text
+1.我在外地取款的手续费是多少？
+2.异地取款的手续费是多少？
+3.异地取款的手续费是多少呢？
+```
+</details>
+<details>
+<summary>表格生成</summary>
+
+> 用户：
+```text
+2019年上海四家知名超市的月销售额和利润率数据如下：超市A的月销售额为1000万元，利润率为10%；超市B的月销售额为1200万元，利润率为12%；超市C的月销售额为800万元，利润率为8%；超市D的月销售额为1500万元，利润率为15%。请根据上述信息生成一张详细的数据表格。
+```
+> TeleChat：
+
+上海2019年超市销售额及利润率数据表:
+| 超市名称 | 月销售额(万元) | 利润率 |
+| ------ | ------------ | -------- |
+| 超市A  | 1000        | 10%     |
+| 超市B  | 1200        | 12%     |
+| 超市C  | 800          | 8%      |
+| 超市D  | 1500        | 15%     |
+</details>
+<details>
+<summary>阅读理解</summary>
+
+> 用户：
+```text
+请对下面文本进行阅读理解并回答问题：李清照的《醉花阴》这首词是为了表达什么情感而写的？
+李清照，宋代女词人，号易安居士，齐州章丘人。出生于书香门第，早期生活优裕，其父李格非藏书甚富。她小时候就在良好的家庭环境中打下文学基础，出嫁后与丈夫赵明诚共同致力于书画金石的搜集整理。金兵入据中原时，流寓南方，境遇孤苦。绍兴二十五年去世。
+李清照所作词，前期多写悠闲生活，后期悲叹身世，情调感伤。艺术上，善用白描手法，自辟途径，语言清丽。论词强调协律，崇尚典雅，提出词“别是一家”之说，反对以作诗文之法作词。能诗，留存不多，部分篇章感时咏史，情辞慷慨，与其词风不同。作品有《李易安集》《易安居士文集》《易安词》，已散佚。后人辑有《漱玉集》《漱玉词》。今有《李清照集》辑本。
+十八岁的李清照与赵明诚结婚，两人情投意合，互相砥砺，把整个身心都放在文学艺术的深造和金石文字的收集研究上。在重阳节，李清照为了抒发自己对丈夫的思念，作了那首著名的《醉花阴》。金兵的横行肆虐激起李清照强烈的爱国情感，她积极主张北伐收复中原，然而南宋王朝的腐朽无能和偏安一隅，使她的希望彻底成为了幻影。在那种离乱的年代，悲愤欲绝的她写下了一首雄浑奔放的《夏日绝句》。
+李清照的一生充满了坎坷与磨难，她的作品也因此充满了深深的感伤与忧虑。然而，她的才华和坚韧的精神却永远值得我们学习和敬仰。她不仅是一位伟大的女词人，更是一位爱国英雄，她的作品和人生都为我们提供了宝贵的历史见证和人文思考。
+```
+> TeleChat:
+```text
+李清照的《醉花阴》这首词是为了表达对丈夫赵明诚的思念之情。
+```
+</details>
 
 
 # 模型微调
@@ -349,13 +647,13 @@ TeleChat的分词算法是BBPE算法，该算法是字节级实现的分词算�
 4. 用途不同：生抽主要用于调味酱料、腌制肉类等；老抽则主要用于烹调菜肴、焖煮食材等。
 ```
 
-# 国产GPU适配
+# 国产化适配
 
-### 华为 ATLAS 300 ipro 的推理适配
+### 昇腾Atlas 300i Pro推理卡：推理适配
 
-当前星辰语义大模型已经支持了华为 ATLAS 300 ipro 的推理适配和int8量化。
-- 效果方面，完成了和基于A10卡模型量化效果对齐；
-- 性能方面，具体对比效果如下：
+当前星辰语义大模型TeleChat已支持昇腾 Atlas 300i Pro推理卡。具备int8量化能力。
+- 精度方面，int8量化精度对齐A10；
+- 性能方面，具体对比如下：
   
     | 输入输出信息                           | NPU (tokens/s)    |   GPU (tokens/s)   |    
     | ------------------------------------ | ------- | -------|
@@ -363,36 +661,39 @@ TeleChat的分词算法是BBPE算法，该算法是字节级实现的分词算�
     | 输入1000输出100                        | 13   | 24 |
     | 输入2000输出100                        | 11   | 19 |    
     | 25组case平均                           |  13  |  18 | 
-- TeleChat支持昇腾ATLAS 300 ipro推理和量化，所需的README、示例脚本已发布：[TeleChat-7B](https://gitee.com/ascend/ModelLink/tree/master/speed_infer/pytorch/examples/telechat)
+- Telechat支持基于昇腾Atlas 300i Pro进行推理并且具备int8量化能力，用户所需的推理部署指导、推理镜像下载等、已发布：[TeleChat-7B](https://gitee.com/ascend/ModelLink/tree/master/speed_infer/pytorch/examples/telechat)
 
-### 910B-Mindspore 训练推理适配
+### 昇腾Atlas 800T A2训练服务器+昇思MindSpore框架:  训练、推理适配
 
-当前星辰语义大模型已经支持了华为910B卡，基于 Mindspore 框架的模型训练和推理。
-- 效果方面，完成了和基于A100卡模型训练效果对齐，loss一致；
-  
-<img src="./images/910B-pytorch训练loss对比.png" width = "300" height = "300" alt="910B-pytorch训练loss对比.png" />
+当前星辰语义大模型TeleChat已经支持昇腾Atlas 800T A2训练服务器，可基于昇思MindSpore框架进行模型训练和推理。
+- 效果方面，模型训练效果对齐A100，loss基本吻合；
 
-- 性能方面，具体对比效果如下：
-  
-    | NAME    |  performance(samples(2K)/s) | Epochs | AMP_Type |
-    | ------- | ---: | ------ | -------: |
-    | 8p-GPU(A100-40G) | 10 | 5    |        - |
-    | 8p-NPU(910B)  |  8.49 | 5    |       O2 |
-  说明：BatchSize/per-GPU = 2 , zero-stage=3
-- TeleChat支持了昇腾910B卡Mindspore版本模型训练，训练所需的modeling、readme、脚本已发布：[TeleChat-7B-Mindspore](https://gitee.com/mindspore/mindformers/tree/dev/research/telechat)
-
-### 910B-Pytorch 训练推理适配
-
-当前星辰语义大模型已经支持了华为910B卡，基于 Pytorch 框架的模型训练和推理。
-- 效果方面，完成了和基于A100卡模型训练效果对齐，loss一致；
-- 性能方面，具体对比效果如下：
-  
+- 性能方面，具体对比如下：
+    
     | NAME    | performance(samples/s) | Epochs | AMP_Type |
     | ------- |-----------------------:| ------ | -------: |
     | 8p-GPU(A100-40G) |                   8.86 | 5    |        - |
-    | 8p-NPU(910B)  |                    7.6 | 5    |       O2 |
-  说明：BatchSize/per-GPU = 1, zero-stage=3
-- TeleChat支持了昇腾910B卡Pytorch版本模型训练，训练所需的modeling、readme、脚本已发布：[TeleChat-7B-Pytorch](https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/PyTorch/contrib/nlp/Telechat)
+    | 8p-NPU  |                    7.98 | 5    |       O2 |
+  
+    说明：BatchSize/per-GPU = 2 , zero-stage=3
+- TeleChat支持昇腾Atlas 800T A2训练服务器，可基于昇思MindSpore框架进行模型训练，训练所需的modeling、README、脚本已发布：[TeleChat-7B-MindSpore](https://gitee.com/mindspore/mindformers/tree/dev/research/telechat)
+
+### 昇腾Atlas 800T A2训练服务器+PyTorch框架:  训练、推理适配
+
+当前星辰语义大模型TeleChat已经支持昇腾Atlas 800T A2训练服务器，可基于PyTorch 框架进行模型训练和推理。
+- 效果方面，模型训练效果对齐A100，loss基本吻合；
+  
+  <img src="./images/910B-pytorch训练loss对比.png" width = "300" height = "300" alt="PyTorch训练loss对比.png" />
+
+- 性能方面，具体对比如下：
+
+    | NAME    |  performance(samples(2K)/s) | Epochs | AMP_Type |
+    | ------- | ---: | ------ | -------: |
+    | 8p-GPU(A100-40G) | 10 | 5    |        - |
+    | 8p-NPU  |  8.99 | 5    |       O2 |  
+
+    说明：BatchSize/per-GPU = 1, zero-stage=3
+- TeleChat支持昇腾Atlas 800T A2训练服务器，可基于PyTorch框架进行模型训练，训练所需的modeling、README、脚本已发布：[TeleChat-7B-PyTorch](https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/PyTorch/contrib/nlp/Telechat)
 
 # 声明、协议、引用
 ### 声明
@@ -401,7 +702,7 @@ TeleChat的分词算法是BBPE算法，该算法是字节级实现的分词算�
 我们已经尽我们所能，来确保模型训练过程中使用的数据的合规性。然而，尽管我们已经做出了巨大的努力，但由于模型和数据的复杂性，仍有可能存在一些无法预见的问题。因此，如果由于使用TeleChat开源模型而导致的任何问题，包括但不限于数据安全问题、公共舆论风险，或模型被误导、滥用、传播或不当利用所带来的任何风险和问题，我们将不承担任何责任。
 
 ### 协议
-社区使用 TeleChat 模型需要遵循《[TeleChat模型社区许可协议](./TeleChat模型社区许可协议.pdf)》。TeleChat模型支持商业用途，如果您计划将 TeleChat 模型或其衍生品用于商业目的，您需要通过以下联系邮箱 TeleAI@chinatelecom.cn，提交《TeleChat模型社区许可协议》要求的申请材料。审核通过后，将特此授予您一个非排他性、全球性、不可转让、不可再许可、可撤销的商用版权许可。
+社区使用 TeleChat 模型需要遵循《[TeleChat模型社区许可协议](./TeleChat模型社区许可协议.pdf)》。TeleChat模型支持商业用途，如果您计划将 TeleChat 模型或其衍生品用于商业目的，您需要通过以下联系邮箱 tele_ai@chinatelecom.cn，提交《TeleChat模型社区许可协议》要求的申请材料。审核通过后，将特此授予您一个非排他性、全球性、不可转让、不可再许可、可撤销的商用版权许可。
 
 ### 引用
 如需引用我们的工作，请使用如下 reference:
