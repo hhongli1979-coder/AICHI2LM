@@ -87,9 +87,9 @@ data: 单条处理后的预训练数据
 
 ### 数据下载
 
-huggingface下载地址：TODO
+huggingface下载地址：[数据下载](https://huggingface.co/datasets/Tele-AI/TeleChat-PTD)
 
-天翼云盘下载地址：TODO
+天翼云盘下载地址：[数据下载](https://cloud.189.cn/t/ia2QbaVzYf6z)（访问码：pkg8）
 
 # 效果评测
 TeleChat模型相比同规模模型在评测效果方面也有较好的表现，我们的评测集涵盖了包括MMLU、C-Eval、GAOKAO、AGIEval、CMMLU、 GSM8K、MATH、HumanEval、CHID等数据集，评测能力包括了自然语言理解、知识、数学计算和推理、代码生成等
@@ -649,9 +649,9 @@ TeleChat的分词算法是BBPE算法，该算法是字节级实现的分词算�
 
 # 国产化适配
 
-### 昇腾Atlas 300i Pro推理卡：推理适配
+### 昇腾 Atlas 300I Pro 推理卡：推理适配
 
-当前星辰语义大模型TeleChat已支持昇腾 Atlas 300i Pro推理卡。具备int8量化能力。
+当前星辰语义大模型TeleChat已支持昇腾 Atlas 300I Pro 推理卡。具备int8量化能力。
 - 精度方面，int8量化精度对齐A10；
 - 性能方面，具体对比如下：
   
@@ -675,7 +675,7 @@ TeleChat的分词算法是BBPE算法，该算法是字节级实现的分词算�
     | 8p-GPU(A100-40G) |                   8.86 | 5    |        - |
     | 8p-NPU  |                    7.98 | 5    |       O2 |
   
-    说明：BatchSize/per-GPU = 2 , zero-stage=3
+    说明：BatchSize/per-GPU=1，zero-stage=3， seq_length=2048， gradient_accumulation_steps：4
 - TeleChat支持昇腾Atlas 800T A2训练服务器，可基于昇思MindSpore框架进行模型训练，训练所需的modeling、README、脚本已发布：[TeleChat-7B-MindSpore](https://gitee.com/mindspore/mindformers/tree/dev/research/telechat)
 
 ### 昇腾Atlas 800T A2训练服务器+PyTorch框架:  训练、推理适配
@@ -692,7 +692,7 @@ TeleChat的分词算法是BBPE算法，该算法是字节级实现的分词算�
     | 8p-GPU(A100-40G) | 10 | 5    |        - |
     | 8p-NPU  |  8.99 | 5    |       O2 |  
 
-    说明：BatchSize/per-GPU = 1, zero-stage=3
+    说明：BatchSize/per-GPU=2，zero-stage=3，seq_length=2048， gradient_accumulation_steps：2
 - TeleChat支持昇腾Atlas 800T A2训练服务器，可基于PyTorch框架进行模型训练，训练所需的modeling、README、脚本已发布：[TeleChat-7B-PyTorch](https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/PyTorch/contrib/nlp/Telechat)
 
 # 声明、协议、引用
