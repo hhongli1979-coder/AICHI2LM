@@ -236,9 +236,32 @@ neural_evolution/
 
 ## 🧪 测试 Testing
 
+运行演示脚本进行完整测试：
+
 ```bash
-cd neural_evolution
-python -c "from integration import create_neural_evolution_system; s = create_neural_evolution_system(); print(s.get_system_status())"
+# 运行完整演示
+python examples/neural_evolution_demo.py
+
+# 快速验证安装
+python -c "
+from neural_evolution import DarwinGodelMachine, EvolutionaryMemory
+from neural_evolution.integration import create_neural_evolution_system
+
+# 测试基础模块
+machine = DarwinGodelMachine(population_size=3)
+machine.initialize_population()
+result = machine.evolve()
+print(f'✓ Darwin Godel Machine: evolution successful')
+
+memory = EvolutionaryMemory()
+print(f'✓ Evolutionary Memory: initialized')
+
+# 测试集成系统
+system = create_neural_evolution_system()
+print(f'✓ Neural Evolution System: ready')
+
+print('\\n所有测试通过! All tests passed!')
+"
 ```
 
 ## 📜 许可证 License

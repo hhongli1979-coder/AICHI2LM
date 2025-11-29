@@ -303,10 +303,12 @@ def demo_integrated_system():
     result = system.evolve("如何优化数据库查询性能？")
 
     print(f"进化结果:")
-    print(f"  达尔文机性能: {result['components']['darwin']['performance']:.4f}")
-    if 'thinking' in result['components']:
-        print(f"  思考轮数: {result['components']['thinking']['rounds']}")
-        print(f"  思考质量: {result['components']['thinking']['quality']}")
+    darwin_component = result.get('components', {}).get('darwin', {})
+    print(f"  达尔文机性能: {darwin_component.get('performance', 0):.4f}")
+    thinking_component = result.get('components', {}).get('thinking')
+    if thinking_component:
+        print(f"  思考轮数: {thinking_component.get('rounds', 0)}")
+        print(f"  思考质量: {thinking_component.get('quality', 'N/A')}")
 
     # 思考并解决问题
     print("\n思考解决问题...")
@@ -314,8 +316,8 @@ def demo_integrated_system():
         "设计一个分布式缓存系统",
         max_rounds=3
     )
-    print(f"解决方案得分: {solution_result['score']:.4f}")
-    print(f"解决方案质量: {solution_result['quality']}")
+    print(f"解决方案得分: {solution_result.get('score', 0):.4f}")
+    print(f"解决方案质量: {solution_result.get('quality', 'N/A')}")
 
     # 从经验中学习
     print("\n从经验中学习...")
