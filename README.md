@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-🤗 <a href="https://huggingface.co/Tele-AI" target="_blank">Hugging Face (原始模型)</a> • 🏔 <a href="https://gitee.com/mindspore/mindformers/tree/dev/research/telechat" target="_blank">MindSpore</a> • 🐾 <a href="https://gitee.com/Tele-AI/tele-chat" target="_blank">gitee</a>️
+🤗 <a href="https://huggingface.co/Tele-AI" target="_blank">Hugging Face (原始模型)</a> • 🏔 <a href="https://gitee.com/mindspore/mindformers/tree/dev/research/telechat" target="_blank">MindSpore (原始项目)</a> • 🐾 <a href="https://gitee.com/Tele-AI/tele-chat" target="_blank">gitee (原始仓库)</a>️
 </p>
 
 <p align="center">
