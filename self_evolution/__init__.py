@@ -15,6 +15,9 @@
 - evolution_director: 智能进化导向系统
 - evolution_validator: 进化效果验证
 - main_evolution: 完整进化工作流
+- memory_system: 记忆系统 (短期/长期/工作/情节记忆)
+- language_support: 多语言支持
+- enhanced_reasoning: 增强推理能力
 
 进化飞轮效应:
 环境挑战 → 性能差距识别 → 自我优化 → 能力提升 → 应对更复杂挑战 → ...
@@ -30,6 +33,9 @@ from .tool_creator import SelfToolCreator
 from .evolution_director import IntelligentEvolutionDirector
 from .evolution_validator import EvolutionValidator
 from .main_evolution import main_evolution_cycle
+from .memory_system import MemorySystem
+from .language_support import MultiLanguageSupport
+from .enhanced_reasoning import EnhancedReasoning
 
 __all__ = [
     'EvolutionTrigger',
@@ -41,7 +47,10 @@ __all__ = [
     'SelfToolCreator',
     'IntelligentEvolutionDirector',
     'EvolutionValidator',
-    'main_evolution_cycle'
+    'main_evolution_cycle',
+    'MemorySystem',
+    'MultiLanguageSupport',
+    'EnhancedReasoning',
 ]
 
-__version__ = '1.0.0'
+__version__ = '1.1.0'
