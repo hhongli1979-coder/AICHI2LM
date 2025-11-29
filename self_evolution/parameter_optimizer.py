@@ -373,9 +373,13 @@ class SelfParameterOptimizer:
         """计算标准差"""
         if len(values) < 2:
             return 0.0
-        mean = sum(values) / len(values)
-        variance = sum((x - mean) ** 2 for x in values) / len(values)
-        return variance ** 0.5
+        try:
+            import statistics
+            return statistics.pstdev(values)
+        except Exception:
+            mean = sum(values) / len(values)
+            variance = sum((x - mean) ** 2 for x in values) / len(values)
+            return variance ** 0.5
         
     def _calculate_new_weight_decay(self, severity: float) -> float:
         """计算新的权重衰减值"""
