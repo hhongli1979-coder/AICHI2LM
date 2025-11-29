@@ -1,0 +1,45 @@
+# TeleChat 配置文件
+
+# 模型配置
+model:
+  name: "TeleChat-12B-V2"
+  path: "./models/12B-V2"
+  dtype: "float16"
+  device_map: "auto"
+  trust_remote_code: true
+  use_cache: true
+
+# 推理配置
+inference:
+  max_length: 4096
+  max_new_tokens: 2048
+  temperature: 0.7
+  top_p: 0.9
+  top_k: 50
+  repetition_penalty: 1.1
+  do_sample: true
+
+# 服务配置
+service:
+  host: "0.0.0.0"
+  port: 8080
+  workers: 1
+  timeout: 300
+  reload: false
+  cors_origins:
+    - "*"
+
+# 记忆系统配置
+memory:
+  enabled: true
+  database_url: "sqlite:///telechat_memory.db"
+  max_history: 20
+  short_term_capacity: 100
+  long_term_enabled: true
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/telechat.log"
+  console: true
