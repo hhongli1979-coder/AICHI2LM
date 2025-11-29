@@ -19,6 +19,11 @@ import hashlib
 
 logger = logging.getLogger(__name__)
 
+# Time constants
+SECONDS_PER_HOUR = 3600
+SECONDS_PER_DAY = 86400
+DAYS_FOR_RELEVANCE = 7
+
 
 @dataclass
 class MemoryItem:
@@ -233,19 +238,27 @@ class MemorySystem:
             if m.importance >= self.long_term_threshold
         ]
         
+        # Collect IDs to remove after iteration
+        ids_to_remove = []
+        
         for memory in important_memories:
+            # Store original ID before modification
+            original_id = memory.memory_id
+            
             # 转移到长期记忆
-            new_id = memory.memory_id.replace('short_term', 'long_term')
+            new_id = original_id.replace('short_term', 'long_term')
             memory.memory_id = new_id
             memory.memory_type = 'long_term'
             self.long_term_memory[new_id] = memory
             
-            # 从短期记忆中移除
-            old_id = memory.memory_id.replace('long_term', 'short_term')
+            # Mark for removal from short-term memory
+            ids_to_remove.append(original_id)
+            consolidated_count += 1
+        
+        # Remove from short-term memory
+        for old_id in ids_to_remove:
             if old_id in self.short_term_memory:
                 del self.short_term_memory[old_id]
-                
-            consolidated_count += 1
             
         self.memory_statistics['consolidations'] += consolidated_count
         logger.info(f"Consolidated {consolidated_count} memories to long-term storage")
@@ -270,7 +283,7 @@ class MemorySystem:
         for memory_id, memory in self.short_term_memory.items():
             # 计算时间衰减
             time_delta = (current_time - memory.last_accessed).total_seconds()
-            decay = decay_rate * (time_delta / 3600)  # 每小时衰减
+            decay = decay_rate * (time_delta / SECONDS_PER_HOUR)  # 每小时衰减
             
             # 根据重要性和访问频率决定是否遗忘
             forget_threshold = memory.importance - decay + (memory.access_count * 0.01)
@@ -552,7 +565,7 @@ class MemorySystem:
         
         # 时间衰减
         time_delta = (datetime.now() - memory.last_accessed).total_seconds()
-        time_factor = max(0, 1 - (time_delta / (86400 * 7)))  # 7天内
+        time_factor = max(0, 1 - (time_delta / (SECONDS_PER_DAY * DAYS_FOR_RELEVANCE)))
         score += 0.1 * time_factor
         
         return min(1.0, score)

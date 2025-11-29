@@ -18,6 +18,10 @@ import re
 
 logger = logging.getLogger(__name__)
 
+# Cross-lingual relevance constants
+BASE_CROSS_LINGUAL_RELEVANCE = 0.4
+SAME_LANGUAGE_BONUS = 0.1
+
 
 @dataclass
 class LanguageProfile:
@@ -608,12 +612,28 @@ class MultiLanguageSupport:
             'es': 'Esta es una respuesta generada basada en su indicación.',
         }
         
+        # Localized prompt labels
+        prompt_labels = {
+            'zh': '提示内容',
+            'en': 'Prompt content',
+            'ja': 'プロンプト内容',
+            'ko': '프롬프트 내용',
+            'fr': 'Contenu du prompt',
+            'de': 'Eingabeinhalt',
+            'es': 'Contenido del indicación',
+        }
+        
         base_response = language_greetings.get(
             target_language,
             language_greetings['en']
         )
         
-        return f"{base_response}\n\n提示内容: {prompt[:100]}..."
+        prompt_label = prompt_labels.get(
+            target_language,
+            prompt_labels['en']
+        )
+        
+        return f"{base_response}\n\n{prompt_label}: {prompt[:100]}..."
         
     def _perform_translation(
         self,
@@ -651,10 +671,10 @@ class MultiLanguageSupport:
             query_words = set(query.lower().split())
             item_words = set(item.lower().split())
             overlap = len(query_words & item_words)
-            return min(1.0, overlap / max(len(query_words), 1) + 0.1)
+            return min(1.0, overlap / max(len(query_words), 1) + SAME_LANGUAGE_BONUS)
         else:
             # 不同语言，使用基础相关性分数
-            return 0.4
+            return BASE_CROSS_LINGUAL_RELEVANCE
             
     def _synthesize_cross_lingual_answer(
         self,

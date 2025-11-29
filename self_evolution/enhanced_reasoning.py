@@ -19,6 +19,9 @@ import copy
 
 logger = logging.getLogger(__name__)
 
+# Reasoning configuration constants
+DEFAULT_MIN_STEPS_FOR_FINAL = 4  # Minimum steps before reasoning can be considered final
+
 
 class ReasoningType(Enum):
     """推理类型枚举"""
@@ -113,14 +116,20 @@ class EnhancedReasoning:
     5. 元推理 - 监控和优化推理过程
     """
     
-    def __init__(self, max_reasoning_depth: int = 10):
+    def __init__(
+        self,
+        max_reasoning_depth: int = 10,
+        min_steps_for_final: int = DEFAULT_MIN_STEPS_FOR_FINAL
+    ):
         """
         初始化增强推理系统
         
         Args:
             max_reasoning_depth: 最大推理深度
+            min_steps_for_final: 考虑推理完成的最小步骤数
         """
         self.max_reasoning_depth = max_reasoning_depth
+        self.min_steps_for_final = min_steps_for_final
         self.reasoning_history: List[ReasoningChain] = []
         self.learned_patterns: List[Dict[str, Any]] = []
         self.causal_knowledge: List[CausalRelation] = []
@@ -597,7 +606,7 @@ class EnhancedReasoning:
             'conclusion': f"完成了{action['description']}",
             'confidence': 0.8,
             'evidence': ['推理执行'],
-            'is_final': len(state['progress']) >= 4
+            'is_final': len(state['progress']) >= self.min_steps_for_final
         }
         
     def _generate_final_answer(
