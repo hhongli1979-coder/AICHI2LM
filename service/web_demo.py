@@ -4,8 +4,8 @@ import requests
 import streamlit as st
 
 
-st.set_page_config(page_title="Telechat")
-st.title("Welcome Telechat")
+st.set_page_config(page_title="AICHI2LM")
+st.title("Welcome AICHI2LM")
 
 
 def clear_chat_history():
@@ -14,7 +14,7 @@ def clear_chat_history():
 
 def init_chat_history():
     with st.chat_message("bot", avatar="assistant"):
-        st.markdown("您好，我是Telechat，很高兴为您服务")
+        st.markdown("您好，我是AICHI2LM，很高兴为您服务")
 
     if "messages" in st.session_state:
         for message in st.session_state.messages:
