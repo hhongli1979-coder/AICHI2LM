@@ -112,7 +112,7 @@ GitHub for Teams 应用允许您订阅您的存储库或组织，并获取有关
 
 **Copilot 集成：** 您还可以将 Copilot 编码代理与 Microsoft Teams 应用集成，从而直接在团队的沟通平台中使用 AI 驱动的编码辅助功能。
 
-**更多信息：** 请参阅存储库中的集成 README 文件：`integrations/microsoft-teams`。
+**更多信息：** 请参阅 [GitHub 官方 Microsoft Teams 集成文档](https://github.com/integrations/microsoft-teams)。
 
 ---
 
