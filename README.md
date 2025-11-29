@@ -20,6 +20,7 @@
 - [模型微调](#模型微调)
 - [模型量化](#模型量化)
 - [国产化适配](#国产化适配)
+- [参考项目分析](#参考项目分析)
 - [声明、协议、引用](#声明协议引用)
 
 # 最新动态
@@ -731,6 +732,21 @@ TeleChat的分词算法是BBPE算法，该算法是字节级实现的分词算�
 
     说明：BatchSize/per-GPU=2，zero-stage=3，seq_length=2048， gradient_accumulation_steps：2
 - TeleChat支持昇腾Atlas 800T A2训练服务器，可基于PyTorch框架进行模型训练，训练所需的modeling、README、脚本已发布：[TeleChat-7B-PyTorch](https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/PyTorch/contrib/nlp/Telechat)
+
+# 参考项目分析
+
+我们分析了业界优秀的AI开源项目，以借鉴其架构设计和最佳实践：
+
+### 腾讯 Hunyuan3D-1 项目分析
+
+Hunyuan3D-1.0 是由腾讯混元团队开发的AI驱动3D资产生成框架，具有以下特点值得借鉴：
+
+- **两阶段流水线架构**：将复杂任务拆分为多视角图像生成和3D重建两个阶段
+- **模块化设计**：各模块可独立运行，便于在不同硬件环境下灵活配置
+- **多规格模型支持**：提供Standard和Lite版本，适应不同显存需求
+- **完善的部署方案**：支持CLI、API和Web多种访问方式
+
+详细分析请参考：[Hunyuan3D-1 项目分析报告](./docs/Hunyuan3D-1_analysis.md)
 
 # 声明、协议、引用
 ### 声明
