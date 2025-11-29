@@ -7,15 +7,15 @@ PATH = '../models/12B'
 
 
 def main():
-    # 加载模型相关
+    # 加载AICHI2LM模型
     tokenizer = AutoTokenizer.from_pretrained(PATH,trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(PATH, trust_remote_code=True, device_map="auto",
                                                  torch_dtype=torch.float16)
     generate_config = GenerationConfig.from_pretrained(PATH)
     model.eval()
 
-    #  chat(bot)模型多轮演示
-    print("*" * 10 + "多轮输入演示" + "*" * 10)
+    # AICHI2LM多轮对话演示
+    print("*" * 10 + "AICHI2LM多轮输入演示" + "*" * 10)
     question = "你是谁？"
     print("提问:", question)
     answer, history = model.chat(tokenizer = tokenizer, question=question, history=[], generation_config=generate_config,
@@ -34,7 +34,7 @@ def main():
     # 也可以这么调用传入history
     history = [
         {"role": "user", "content": "你是谁"},
-        {"role": "bot", "content": "我是telechat"},
+        {"role": "bot", "content": "我是AICHI2LM"},
     ]
 
     question = "你是谁训练的"
@@ -44,8 +44,8 @@ def main():
     print("回答是:", answer)
     print("截至目前的聊天记录是:", history)
 
-    # chat(bot)模型 流式返回演示
-    print("*" * 10 + "流式输入演示" + "*" * 10)
+    # AICHI2LM流式返回演示
+    print("*" * 10 + "AICHI2LM流式输入演示" + "*" * 10)
     question = "你是谁？"
     print("提问:", question)
     gen = model.chat(tokenizer, question=question, history=[], generation_config=generate_config,

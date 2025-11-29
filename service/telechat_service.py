@@ -18,7 +18,7 @@ model = AutoModelForCausalLM.from_pretrained(PATH, trust_remote_code=True, devic
                                              torch_dtype=torch.float16)
 generate_config = GenerationConfig.from_pretrained(PATH)
 model.eval()
-print("=============AIGC服务启动==========")
+print("=============AICHI2LM服务启动==========")
 
 
 def _gc():

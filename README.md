@@ -1,18 +1,23 @@
 <div align="center">
 <h1>
-  星辰语义大模型-TeleChat
+  AICHI2LM - AI Chinese Language Model
 </h1>
 </div>
 
 <p align="center">
-🤗 <a href="https://huggingface.co/Tele-AI" target="_blank">Hugging Face</a> • 🏔 <a href="https://gitee.com/mindspore/mindformers/tree/dev/research/telechat" target="_blank">MindSpore</a> • 🐾 <a href="https://gitee.com/Tele-AI/tele-chat" target="_blank">gitee</a>️ • 💬 <a href="https://github.com/Tele-AI/Telechat/blob/master/images/wechat.jpg" target="_blank">WeChat</a>
+基于TeleChat的二次开发 | Secondary development based on TeleChat
 </p>
 
 <p align="center">
- <a href="https://arxiv.org/abs/2401.03804" target="_blank"> Tech Report </a> 
+🤗 <a href="https://huggingface.co/Tele-AI" target="_blank">Hugging Face (原始模型)</a> • 🏔 <a href="https://gitee.com/mindspore/mindformers/tree/dev/research/telechat" target="_blank">MindSpore</a> • 🐾 <a href="https://gitee.com/Tele-AI/tele-chat" target="_blank">gitee</a>️
+</p>
+
+<p align="center">
+ <a href="https://arxiv.org/abs/2401.03804" target="_blank"> Tech Report (TeleChat原始论文) </a> 
 </p>
 
 # 目录
+- [项目介绍](#项目介绍)
 - [模型介绍](#模型介绍)
 - [数据开源](#数据开源)  
 - [效果评测](#效果评测)
@@ -22,6 +27,17 @@
 - [国产化适配](#国产化适配)
 - [声明、协议、引用](#声明协议引用)
 
+# 项目介绍
+### AICHI2LM
+AICHI2LM是基于中电信人工智能科技有限公司研发的TeleChat大语言模型进行的二次开发项目。本项目旨在为用户提供便捷的大语言模型使用和微调能力。
+
+**主要特性：**
+- 基于TeleChat-7B和TeleChat-12B模型
+- 支持中英文双语对话
+- 提供完整的推理和微调代码
+- 支持多种量化方案(int8/int4)
+- 支持国产化硬件适配
+
 # 最新动态
 - 2024.5.16 开源优化的12B版本chat模型**TeleChat-12B-V2**
 - 2024.3.20 开源12B版本chat模型及量化版本
@@ -29,7 +45,7 @@
 - 2024.1.10 开源7B版本chat模型及其量化版本
 
 # 模型介绍
-### 星辰语义大模型-TeleChat
+### AICHI2LM (基于TeleChat)
 - 星辰语义大模型TeleChat是由中电信人工智能科技有限公司研发训练的大语言模型，其中7B模型基座采用1.5万亿 Tokens中英文高质量语料进行训练，12B模型基座采用3万亿 Tokens中英文高质量语料进行训练。
 - 我们开源了对话模型**TeleChat-7B**与**TeleChat-12B**，以及其`huggingface`格式的权重文件。此外，我们还开源了7B、12B模型的int8和int4量化版本。
 - **TeleChat-12B**在模型结构、训练数据、训练方法等方面进行了改进，在通用问答和知识类、代码类、数学类榜单上相比**TeleChat-7B**均有大幅提升。
