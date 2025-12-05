@@ -29,7 +29,7 @@ fi
 # Try to start uvicorn with main:app
 if check_file "main.py"; then
     echo "✓ Found main.py, checking for FastAPI app..."
-    if grep -q "FastAPI" main.py 2>/dev/null; then
+    if python -c "import main; hasattr(main, 'app')" 2>/dev/null; then
         echo "✓ Starting uvicorn main:app..."
         exec uvicorn main:app --host 0.0.0.0 --port 8000
     fi
@@ -44,7 +44,7 @@ fi
 # Try to start the service from service/telechat_service.py
 if check_file "service/telechat_service.py"; then
     echo "✓ Found service/telechat_service.py, starting TeleChat service..."
-    cd service
+    cd service || { echo "❌ Failed to change to service directory"; exit 1; }
     exec uvicorn telechat_service:app --host 0.0.0.0 --port 8000
 fi
 

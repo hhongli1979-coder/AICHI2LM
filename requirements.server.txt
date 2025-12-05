@@ -13,9 +13,10 @@ httpx>=0.24.0
 transformers>=4.30.0
 safetensors>=0.3.1
 
-# Optional: PyTorch CPU-only wheel (uncomment if needed)
-# Install CPU-only PyTorch with: pip install torch --index-url https://download.pytorch.org/whl/cpu
-# torch>=1.13.1
+# Note: PyTorch will be automatically installed as a dependency of transformers.
+# For CPU-only deployment, transformers will install the CPU-compatible version.
+# For explicit CPU-only PyTorch, you can pre-install with:
+# pip install torch --index-url https://download.pytorch.org/whl/cpu
 
 # Utility dependencies
 pyyaml>=6.0

@@ -79,6 +79,8 @@ print_msg "=========================================="
 
 # Login to Docker Hub
 print_msg "Logging into Docker Hub..."
+# Note: Using stdin for password is recommended by Docker for security
+# https://docs.docker.com/engine/reference/commandline/login/#provide-a-password-using-stdin
 echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
 
 if [ $? -ne 0 ]; then

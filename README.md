@@ -764,10 +764,10 @@ TeleChat 提供了自动化的 Docker 镜像构建和发布流程，支持 CPU �
 
 ```bash
 # 拉取最新的 CPU 镜像
-docker pull ghcr.io/hhongli1979-coder/telechat:latest-cpu
+docker pull ghcr.io/<github-username>/telechat:latest-cpu
 
 # 运行容器
-docker run -p 8000:8000 ghcr.io/hhongli1979-coder/telechat:latest-cpu
+docker run -p 8000:8000 ghcr.io/<github-username>/telechat:latest-cpu
 ```
 
 ### 从 Docker Hub 拉取镜像（需要先配置）
@@ -867,12 +867,12 @@ GitHub Container Registry 会自动生成以下标签：
 # 挂载模型目录
 docker run -p 8000:8000 \
   -v /path/to/models:/app/models \
-  ghcr.io/hhongli1979-coder/telechat:latest-cpu
+  ghcr.io/<github-username>/telechat:latest-cpu
 
 # 挂载配置文件
 docker run -p 8000:8000 \
   -v /path/to/deploy_config.yaml:/app/deploy_config.yaml \
-  ghcr.io/hhongli1979-coder/telechat:latest-cpu
+  ghcr.io/<github-username>/telechat:latest-cpu
 ```
 
 ### GPU 支持
@@ -886,7 +886,7 @@ docker run -p 8000:8000 \
 # 运行 GPU 容器
 docker run --gpus all -p 8000:8000 \
   -v /path/to/models:/app/models \
-  ghcr.io/hhongli1979-coder/telechat:latest-gpu
+  ghcr.io/<github-username>/telechat:latest-gpu
 ```
 
 ## 容器启动逻辑

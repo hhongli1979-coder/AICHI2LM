@@ -44,8 +44,8 @@ checkpoints/
 datasets/
 data/
 *.csv
-*.json
-*.jsonl
+# *.json - Don't exclude all JSON, some are needed for configs
+# *.jsonl - Don't exclude all JSONL initially
 *.parquet
 
 # Logs and temporary files
