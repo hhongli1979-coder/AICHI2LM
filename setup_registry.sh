@@ -56,11 +56,12 @@ echo ""
 
 # 如果未提供密码，生成一个强随机密码
 if [ -z "$admin_pass" ]; then
-    admin_pass=$(openssl rand -base64 16 | tr -d "=+/" | cut -c1-16)
-    echo ""
+    # 使用 openssl 生成强随机密码 (更多熵)
+    admin_pass=$(openssl rand -base64 18 | head -c 16)
+    echo "" >&2
     echo "⚠️  已生成随机密码，请妥善保存！" >&2
     echo "管理员密码: $admin_pass" >&2
-    echo ""
+    echo "" >&2
 fi
 
 # 使用 Python CLI 工具创建管理员用户

@@ -361,16 +361,41 @@ class DockerRegistryManager:
 
 
 def main():
-    """示例用法 - 仅用于演示，不用于生产环境"""
+    """
+    示例用法 - 仅用于演示和测试
+    
+    警告: 此函数不应在生产环境中使用！
+    请使用 registry_cli.py 或直接调用管理器方法。
+    """
     import os
+    import sys
+    
+    # 安全检查：防止在生产环境中意外运行
+    if os.environ.get('PRODUCTION', '').lower() in ('true', '1', 'yes'):
+        print("错误: 此示例函数不应在生产环境中运行！", file=sys.stderr)
+        print("请使用 registry_cli.py 管理用户和镜像。", file=sys.stderr)
+        sys.exit(1)
+    
+    print("⚠️  警告: 这是一个演示示例，请勿在生产环境使用！")
+    print("生产环境请使用: python3 registry_cli.py\n")
     
     # 创建管理器实例
     manager = DockerRegistryManager()
     
-    # 从环境变量读取密码或使用占位符
-    admin_password = os.environ.get('ADMIN_PASSWORD', 'YOUR_STRONG_PASSWORD_HERE')
-    user1_password = os.environ.get('USER1_PASSWORD', 'YOUR_STRONG_PASSWORD_HERE')
-    user2_password = os.environ.get('USER2_PASSWORD', 'YOUR_STRONG_PASSWORD_HERE')
+    # 从环境变量读取密码或使用明显的占位符
+    admin_password = os.environ.get('ADMIN_PASSWORD')
+    user1_password = os.environ.get('USER1_PASSWORD')
+    user2_password = os.environ.get('USER2_PASSWORD')
+    
+    if not admin_password:
+        print("错误: 未设置 ADMIN_PASSWORD 环境变量", file=sys.stderr)
+        print("请设置: export ADMIN_PASSWORD='your_strong_password'", file=sys.stderr)
+        return
+    
+    if not user1_password:
+        user1_password = 'CHANGE_ME_USER1_PASSWORD'
+    if not user2_password:
+        user2_password = 'CHANGE_ME_USER2_PASSWORD'
     
     # 添加管理员用户
     manager.add_user("admin", admin_password, [Permission.ADMIN.value], "admin@example.com")

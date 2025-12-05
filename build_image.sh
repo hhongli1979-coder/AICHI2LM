@@ -90,12 +90,19 @@ if [[ "$push_confirm" =~ ^[Yy]$ ]]; then
     IMAGE_CREATED=$(docker image inspect "${TAG}" --format='{{.Created}}' 2>/dev/null || echo "")
     
     if [ -n "$IMAGE_SIZE" ] && [ "$IMAGE_SIZE" != "0" ]; then
-        python3 registry_cli.py image register "${IMAGE_NAME}" "${MODEL_VERSION}" \
-            --size "$IMAGE_SIZE" \
-            --created "$IMAGE_CREATED"
+        # 构建注册命令
+        REGISTER_CMD="python3 registry_cli.py image register \"${IMAGE_NAME}\" \"${MODEL_VERSION}\" --size \"$IMAGE_SIZE\""
+        
+        # 只有在创建时间有效时才添加 --created 参数
+        if [ -n "$IMAGE_CREATED" ]; then
+            REGISTER_CMD="$REGISTER_CMD --created \"$IMAGE_CREATED\""
+        fi
+        
+        # 执行注册命令
+        eval "$REGISTER_CMD"
     else
-        echo "警告: 无法获取镜像元数据，跳过自动注册"
-        echo "请手动注册镜像: python3 registry_cli.py image register ${IMAGE_NAME} ${MODEL_VERSION}"
+        echo "警告: 无法获取镜像元数据，跳过自动注册" >&2
+        echo "请手动注册镜像: python3 registry_cli.py image register ${IMAGE_NAME} ${MODEL_VERSION}" >&2
     fi
     
     echo ""
