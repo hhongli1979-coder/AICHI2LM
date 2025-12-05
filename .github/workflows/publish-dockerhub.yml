@@ -21,6 +21,9 @@ jobs:
     # Note: Secrets are checked at step level, not job level
     # The job will run but the login step will fail if secrets are missing
     
+    permissions:
+      contents: read
+    
     strategy:
       matrix:
         variant: [cpu]  # Add 'gpu' if you want to build GPU images in CI
