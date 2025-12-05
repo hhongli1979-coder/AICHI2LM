@@ -2,6 +2,81 @@
 
 本教程旨在帮助使用者快速进行Telechat模型的部署开发，主要包括：
 
+## 一键本地部署 🚀
+
+TeleChat现在支持一键本地部署，无需手动启动多个服务。
+
+### 方式一：使用Python脚本（推荐，跨平台）
+
+```bash
+# 使用默认配置
+python deploy.py
+
+# 使用自定义配置文件
+python deploy.py --config deploy_config.yaml
+
+# 指定模型路径和GPU
+python deploy.py --model-path /path/to/model --gpu 0
+
+# 指定端口
+python deploy.py --api-port 8080 --web-port 8502
+```
+
+### 方式二：使用Shell脚本（Linux/Mac）
+
+```bash
+# 使用默认配置
+./deploy.sh
+
+# 指定模型路径
+./deploy.sh --model ../models/12B
+
+# 指定GPU设备
+./deploy.sh --gpu 0,1
+
+# 指定端口
+./deploy.sh --api-port 8080 --web-port 8502
+```
+
+### 方式三：使用批处理脚本（Windows）
+
+```cmd
+REM 使用默认配置
+deploy.bat
+
+REM 设置环境变量后运行
+set MODEL_PATH=..\models\12B
+set CUDA_VISIBLE_DEVICES=0
+deploy.bat
+```
+
+### 配置说明
+
+可以通过修改 `deploy_config.yaml` 文件来配置部署参数：
+
+```yaml
+# 模型路径
+model_path: '../models/7B'
+
+# API服务配置
+api_host: '0.0.0.0'
+api_port: 8070
+
+# Web服务配置
+web_host: '0.0.0.0'
+web_port: 8501
+
+# GPU设备配置
+gpu_devices: '0'
+```
+
+部署成功后，可以通过以下地址访问：
+- **API文档**: http://localhost:8070/docs
+- **Web界面**: http://localhost:8501
+
+按 `Ctrl+C` 停止所有服务。
+
+---
 
 ## 资源获取
 

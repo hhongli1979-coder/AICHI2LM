@@ -1,0 +1,28 @@
+# TeleChat 部署配置文件
+# TeleChat Deployment Configuration File
+
+# 模型路径 (相对或绝对路径)
+# Model path (relative or absolute path)
+model_path: '../models/7B'
+
+# API服务配置
+# API service configuration
+api_host: '0.0.0.0'
+api_port: 8070
+
+# Web服务配置
+# Web service configuration
+web_host: '0.0.0.0'
+web_port: 8501
+
+# GPU设备配置 (例如: '0' 或 '0,1' 表示使用多个GPU)
+# GPU device configuration (e.g., '0' or '0,1' for multiple GPUs)
+gpu_devices: '0'
+
+# 服务启动检查间隔 (秒)
+# Service startup check interval (seconds)
+check_interval: 2
+
+# 最大等待时间 (秒)
+# Maximum wait time (seconds)
+max_wait_time: 60

@@ -158,7 +158,31 @@ TeleChat模型相比同规模模型在评测效果方面也有较好的表现，
 
 
 ### 模型部署
-TeleChat目前提供了API、Web两种部署方式。目前仅提供简单的单卡单并发场景，用于演示和效果测试。基于参考快速上手手册：[**tutorial**](./docs/tutorial.md)
+
+#### 🚀 一键本地部署（推荐）
+
+TeleChat现在支持一键本地部署，自动启动API和Web服务：
+
+```bash
+# Python脚本方式（跨平台）
+python deploy.py
+
+# Shell脚本方式（Linux/Mac）
+./deploy.sh
+
+# 批处理脚本方式（Windows）
+deploy.bat
+```
+
+部署成功后可访问：
+- API文档: http://localhost:8070/docs
+- Web界面: http://localhost:8501
+
+更多配置选项请参考：[**tutorial**](./docs/tutorial.md)
+
+#### 传统部署方式
+
+TeleChat也支持手动部署API和Web服务。目前仅提供简单的单卡单并发场景，用于演示和效果测试。详情参考快速上手手册：[**tutorial**](./docs/tutorial.md)
 
 API: 分为流式接口和json接口，支持传入推理参数
 
