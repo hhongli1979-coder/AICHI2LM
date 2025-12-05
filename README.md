@@ -115,7 +115,9 @@ python3 registry_cli.py access check user1 telechat 7b-fp16
 
 ## 详细文档
 
-完整的使用指南请参考: [Docker Registry 管理指南](./docs/docker_registry_guide.md)
+- [5分钟快速上手指南](./docs/quick_start.md) - 最快速开始
+- [完整使用指南](./docs/docker_registry_guide.md) - 详细文档
+- [配置示例](./docs/registry_examples.md) - 常见场景和最佳实践
 
 # 数据开源
 ### 数据介绍
