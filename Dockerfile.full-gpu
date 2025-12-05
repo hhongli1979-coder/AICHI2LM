@@ -1,0 +1,38 @@
+# TeleChat Full GPU Dockerfile
+# WARNING: This image is large (~10GB+) and requires significant build time (30-60+ minutes)
+# WARNING: Building this image may require a GPU-enabled Docker host for some dependencies
+# WARNING: Flash-attn and auto-gptq compilation requires CUDA and may fail on CPU-only systems
+
+FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    wget \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy repository files
+COPY . /app
+
+# Install Python dependencies
+# Prefer requirements.full.txt if present, otherwise fallback to requirements.txt
+RUN if [ -f requirements.full.txt ]; then \
+        pip install --no-cache-dir -r requirements.full.txt; \
+    else \
+        pip install --no-cache-dir -r requirements.txt; \
+    fi
+
+# Copy entrypoint script
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# Expose port
+EXPOSE 8000
+
+# Set entrypoint
+ENTRYPOINT ["/usr/local/bin/start.sh"]
