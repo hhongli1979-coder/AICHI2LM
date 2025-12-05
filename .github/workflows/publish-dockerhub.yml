@@ -18,8 +18,8 @@ jobs:
   build-and-push-dockerhub:
     name: Build and Push to Docker Hub
     runs-on: ubuntu-latest
-    # Only run if Docker Hub credentials are available
-    if: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
+    # Note: Secrets are checked at step level, not job level
+    # The job will run but the login step will fail if secrets are missing
     
     strategy:
       matrix:
@@ -29,16 +29,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
+      - name: Check Docker Hub credentials
+        id: check_secrets
+        run: |
+          if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ] || [ -z "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Docker Hub credentials not configured. Skipping Docker Hub push."
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "✅ Docker Hub credentials found."
+          fi
+      
       - name: Set up Docker Buildx
+        if: steps.check_secrets.outputs.skip == 'false'
         uses: docker/setup-buildx-action@v3
       
       - name: Log in to Docker Hub
+        if: steps.check_secrets.outputs.skip == 'false'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
       - name: Extract metadata
+        if: steps.check_secrets.outputs.skip == 'false'
         id: meta
         run: |
           # Determine image tag
@@ -57,6 +71,7 @@ jobs:
           echo "image_name=${IMAGE_NAME}" >> $GITHUB_OUTPUT
       
       - name: Determine Dockerfile
+        if: steps.check_secrets.outputs.skip == 'false'
         id: dockerfile
         run: |
           if [[ "${{ matrix.variant }}" == "gpu" ]]; then
@@ -66,6 +81,7 @@ jobs:
           fi
       
       - name: Build and push Docker image
+        if: steps.check_secrets.outputs.skip == 'false'
         uses: docker/build-push-action@v5
         with:
           context: .

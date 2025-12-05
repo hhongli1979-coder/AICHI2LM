@@ -41,8 +41,7 @@ elif check_python_file "deploy.py"; then
 elif check_python_file "service/telechat_service.py"; then
     echo "✅ Found service/telechat_service.py"
     echo "🌟 Starting with: uvicorn service.telechat_service:app --host 0.0.0.0 --port 8000"
-    cd service
-    exec uvicorn telechat_service:app --host 0.0.0.0 --port 8000
+    exec sh -c 'cd service && exec uvicorn telechat_service:app --host 0.0.0.0 --port 8000'
 
 # 5. Fallback: Start a simple health check server
 else

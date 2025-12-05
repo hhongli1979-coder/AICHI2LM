@@ -83,9 +83,9 @@ docker build -f "$DOCKERFILE" -t "$IMAGE_TAG" . || error "Docker build failed"
 
 info "Build completed successfully"
 
-# Tag with additional tags if specified
-if [[ "$TAG" != "latest" ]]; then
-    LATEST_TAG="${IMAGE_NAME}:latest-${VARIANT}"
+# Tag with latest variant tag as well
+LATEST_TAG="${IMAGE_NAME}:latest-${VARIANT}"
+if [[ "$IMAGE_TAG" != "$LATEST_TAG" ]]; then
     info "Tagging as $LATEST_TAG"
     docker tag "$IMAGE_TAG" "$LATEST_TAG"
 fi
@@ -94,14 +94,14 @@ fi
 info "Pushing image to Docker Hub..."
 docker push "$IMAGE_TAG" || error "Docker push failed"
 
-if [[ "$TAG" != "latest" ]]; then
+if [[ "$IMAGE_TAG" != "$LATEST_TAG" ]]; then
     docker push "$LATEST_TAG" || error "Docker push failed"
 fi
 
 info "Image published successfully!"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "Published: $IMAGE_TAG"
-if [[ "$TAG" != "latest" ]]; then
+if [[ "$IMAGE_TAG" != "$LATEST_TAG" ]]; then
     echo "Also tagged: $LATEST_TAG"
 fi
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

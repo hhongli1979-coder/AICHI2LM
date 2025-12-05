@@ -9,8 +9,8 @@
 
 # Core ML frameworks
 accelerate>=0.24.1
-torch==1.13.1
-transformers==4.30.0
+torch>=1.13.1,<2.0.0
+transformers>=4.30.0,<5.0.0
 
 # Training and optimization
 deepspeed==0.8.3
