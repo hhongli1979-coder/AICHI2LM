@@ -183,13 +183,17 @@ CI/CD 系统需要自动构建和推送镜像：
 # 创建 CI/CD 服务账号 (使用强令牌)
 python3 registry_cli.py user add ci-bot <SECURE_TOKEN> --permissions view,pull,push
 
-# 在 CI/CD 脚本中使用
+# 在 CI/CD 脚本中使用环境变量
+export CI_BOT_TOKEN="<your-secure-token>"
 docker login localhost:5000 -u ci-bot -p $CI_BOT_TOKEN
 docker build -t localhost:5000/telechat:latest .
 docker push localhost:5000/telechat:latest
 ```
 
-**注意:** 在生产环境中，应该使用环境变量或密钥管理系统存储凭据，而不是硬编码在脚本中。
+**安全提示:**
+- 使用环境变量或密钥管理系统存储 CI/CD 凭据
+- 不要在脚本中硬编码密码或令牌
+- 定期轮换 CI/CD 凭据
 
 ### 场景 3: 多环境部署
 

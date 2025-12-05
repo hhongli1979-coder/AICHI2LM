@@ -16,8 +16,8 @@ def setup_parser():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
-  # 添加用户
-  %(prog)s user add admin admin123 --permissions admin --email admin@example.com
+  # 添加用户 (请使用强密码)
+  %(prog)s user add admin <STRONG_PASSWORD> --permissions admin --email admin@example.com
   
   # 列出所有用户
   %(prog)s user list

@@ -94,8 +94,8 @@ docker push localhost:5000/telechat:7b-fp16
 ### 3. 管理用户和权限
 
 ```bash
-# 添加用户
-python3 registry_cli.py user add user1 password123 --permissions view,pull
+# 添加用户 (使用强密码)
+python3 registry_cli.py user add user1 <STRONG_PASSWORD> --permissions view,pull
 
 # 注册镜像并设置访问权限
 python3 registry_cli.py image register telechat 7b-fp16 --users user1,user2
