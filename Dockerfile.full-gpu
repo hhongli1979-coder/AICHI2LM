@@ -1,0 +1,38 @@
+# Dockerfile.full-gpu
+# WARNING: This image is large (10+ GB) and build time can exceed 30 minutes
+# WARNING: Requires NVIDIA GPU with CUDA 11.6+ support
+# WARNING: Not suitable for CPU-only environments
+
+FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    wget \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the entire repository
+COPY . /app/
+
+# Install Python dependencies
+# Prefer requirements.full.txt if available, otherwise requirements.txt
+RUN if [ -f requirements.full.txt ]; then \
+        pip install --no-cache-dir -r requirements.full.txt; \
+    else \
+        pip install --no-cache-dir -r requirements.txt; \
+    fi
+
+# Copy and set entrypoint script permissions
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# Expose API port
+EXPOSE 8000
+
+# Set entrypoint
+ENTRYPOINT ["/usr/local/bin/start.sh"]
