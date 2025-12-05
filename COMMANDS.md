@@ -78,7 +78,7 @@ huggingface-cli download Tele-AI/Telechat-7B --local-dir models/7B
 # 使用 Python 脚本（跨平台）
 python deploy.py
 
-# 使用配置文件
+# 使用配置文件（deploy_config.yaml 已在项目根目录提供）
 python deploy.py --config deploy_config.yaml
 
 # 指定模型路径
@@ -550,14 +550,15 @@ python score_CEVAL.py --path ../models/7B --five_shot
 cd evaluation
 
 # 1. 下载数据集
-# 从 https://github.com/hendrycks/test 下载数据
+# 从 https://github.com/hendrycks/test 下载数据到 ../mmlu/ 目录
 
-# 2. 运行评测
+# 2. 修改脚本参数
+# 编辑 score_MMLU.py，修改以下变量：
+# - PATH = "../models/7B"  # 模型路径
+# - mmlu_dataset = "../mmlu/"  # 数据集路径
+
+# 3. 运行评测
 python score_MMLU.py
-
-# 参数说明（需修改脚本）：
-# - model_path: 模型路径
-# - data_dir: MMLU 数据集路径
 ```
 
 ### 自定义评测
