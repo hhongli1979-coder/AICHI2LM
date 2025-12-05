@@ -5,7 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from fastapi.encoders import jsonable_encoder
 from fastapi import FastAPI
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
@@ -43,6 +45,26 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount static files for Vercel Web Analytics and other static assets
+static_dir = Path(__file__).parent / "static"
+if static_dir.exists():
+    app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
+
+@app.get("/")
+async def root():
+    """Root endpoint serving welcome page with Vercel Web Analytics"""
+    static_file = static_dir / "index.html"
+    if static_file.exists():
+        return FileResponse(path=static_file, media_type="text/html")
+    else:
+        return {
+            "message": "Welcome to TeleChat API",
+            "docs": "/docs",
+            "redoc": "/redoc",
+            "note": "Vercel Web Analytics enabled via /_vercel/insights/script.js"
+        }
 
 
 def check_ex(do_sample, max_length, top_k, top_p, temperature, repetition_penalty):
