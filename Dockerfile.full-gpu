@@ -1,0 +1,38 @@
+# TeleChat Full GPU Docker Image
+# WARNING: This image is LARGE (~10GB+) and requires a GPU to build and run.
+# Build time can exceed 30-60 minutes depending on your connection and GPU.
+# This image includes all training, inference, and evaluation dependencies.
+
+FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    wget \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the entire repository
+COPY . /app
+
+# Install Python dependencies
+# Prefer requirements.full.txt if present, otherwise use requirements.txt
+RUN if [ -f requirements.full.txt ]; then \
+        pip install --no-cache-dir -r requirements.full.txt; \
+    else \
+        pip install --no-cache-dir -r requirements.txt; \
+    fi
+
+# Copy the start script
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# Expose port 8000 for API service
+EXPOSE 8000
+
+# Set entrypoint
+ENTRYPOINT ["/usr/local/bin/start.sh"]

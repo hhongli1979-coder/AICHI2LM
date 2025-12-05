@@ -732,6 +732,213 @@ TeleChat的分词算法是BBPE算法，该算法是字节级实现的分词算�
     说明：BatchSize/per-GPU=2，zero-stage=3，seq_length=2048， gradient_accumulation_steps：2
 - TeleChat支持昇腾Atlas 800T A2训练服务器，可基于PyTorch框架进行模型训练，训练所需的modeling、README、脚本已发布：[TeleChat-7B-PyTorch](https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/PyTorch/contrib/nlp/Telechat)
 
+# Docker 容器化部署
+
+TeleChat 提供了自动化的 Docker 镜像构建和发布流程，支持 CPU 和 GPU 两种环境。
+
+## Docker 镜像说明
+
+我们提供两种 Docker 镜像：
+
+### 1. GPU 镜像 (Dockerfile.full-gpu)
+- **基础镜像**: pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
+- **用途**: 完整的训练、推理和评估环境
+- **要求**: NVIDIA GPU with CUDA 11.6+
+- **镜像大小**: ~10GB+
+- **构建时间**: 30-60分钟
+- **注意**: 构建需要 GPU 环境（flash-attn 等包需要编译）
+
+### 2. CPU 镜像 (Dockerfile.full-cpu)
+- **基础镜像**: python:3.10-slim
+- **用途**: 轻量级 API 服务和开发环境
+- **要求**: 仅需 CPU
+- **镜像大小**: ~2-3GB
+- **构建时间**: 10-20分钟
+- **注意**: CPU 推理速度较慢，建议用于开发和测试
+
+## 快速开始
+
+### 从 GitHub Container Registry 拉取镜像
+
+镜像会自动发布到 GitHub Container Registry (ghcr.io)：
+
+```bash
+# 拉取最新的 CPU 镜像
+docker pull ghcr.io/hhongli1979-coder/telechat:latest-cpu
+
+# 运行容器
+docker run -p 8000:8000 ghcr.io/hhongli1979-coder/telechat:latest-cpu
+```
+
+### 从 Docker Hub 拉取镜像（需要先配置）
+
+如果仓库管理员已配置 Docker Hub 密钥：
+
+```bash
+# 拉取 CPU 镜像
+docker pull <dockerhub-username>/telechat:latest-cpu
+
+# 拉取 GPU 镜像
+docker pull <dockerhub-username>/telechat:latest-gpu
+```
+
+### 本地构建镜像
+
+```bash
+# 构建 CPU 镜像
+docker build -f Dockerfile.full-cpu -t telechat:cpu .
+
+# 构建 GPU 镜像（需要 GPU 环境）
+docker build -f Dockerfile.full-gpu -t telechat:gpu .
+
+# 运行容器
+docker run -p 8000:8000 telechat:cpu
+```
+
+## 自动化发布流程
+
+### GitHub Container Registry (GHCR) - 自动发布
+
+仓库已配置自动发布到 GHCR，无需额外配置：
+
+1. **推送到 main/master 分支**时，GitHub Actions 会自动构建并推送 CPU 镜像到 `ghcr.io`
+2. 镜像使用 `GITHUB_TOKEN` 自动认证，无需额外密钥
+3. 镜像命名格式: `ghcr.io/<owner>/telechat:<tag>-cpu`
+
+**首次使用需要启用 Packages 权限：**
+
+1. 进入仓库 **Settings** → **Actions** → **General**
+2. 在 "Workflow permissions" 部分，选择 **"Read and write permissions"**
+3. 保存设置
+
+### Docker Hub - 手动配置（可选）
+
+如需发布到 Docker Hub，需要配置密钥：
+
+#### 步骤 1: 创建 Docker Hub Access Token
+
+1. 登录 [Docker Hub](https://hub.docker.com/)
+2. 进入 **Account Settings** → **Security** → **Access Tokens**
+3. 点击 **New Access Token**
+4. 设置描述（如 "TeleChat GitHub Actions"）并生成 token
+5. **复制并保存** token（只显示一次）
+
+#### 步骤 2: 配置 GitHub Secrets
+
+1. 进入仓库 **Settings** → **Secrets and variables** → **Actions**
+2. 点击 **New repository secret** 添加以下密钥：
+   - Name: `DOCKERHUB_USERNAME`，Value: 你的 Docker Hub 用户名
+   - Name: `DOCKERHUB_TOKEN`，Value: 刚才创建的 Access Token
+
+#### 步骤 3: 使用本地脚本发布
+
+也可以使用本地脚本手动发布：
+
+```bash
+# 设置环境变量
+export DOCKERHUB_USERNAME=your_username
+export DOCKERHUB_TOKEN=your_token
+
+# 构建并发布 CPU 镜像
+./build-and-publish.sh cpu
+
+# 构建并发布 GPU 镜像（需要 GPU 环境）
+./build-and-publish.sh gpu
+```
+
+## 镜像标签说明
+
+GitHub Container Registry 会自动生成以下标签：
+
+- `latest-cpu`: 最新的 CPU 镜像（main/master 分支）
+- `<branch>-<sha>-cpu`: 基于分支名和 commit SHA 的标签
+- `v*-cpu`: 基于 Git tag 的版本标签（如 v1.0.0-cpu）
+
+## 容器使用说明
+
+### 环境变量
+
+- `CUDA_VISIBLE_DEVICES`: 指定使用的 GPU 设备（仅 GPU 镜像）
+- 其他配置可通过 `deploy_config.yaml` 文件挂载
+
+### 挂载数据卷
+
+```bash
+# 挂载模型目录
+docker run -p 8000:8000 \
+  -v /path/to/models:/app/models \
+  ghcr.io/hhongli1979-coder/telechat:latest-cpu
+
+# 挂载配置文件
+docker run -p 8000:8000 \
+  -v /path/to/deploy_config.yaml:/app/deploy_config.yaml \
+  ghcr.io/hhongli1979-coder/telechat:latest-cpu
+```
+
+### GPU 支持
+
+运行 GPU 镜像需要 NVIDIA Container Toolkit：
+
+```bash
+# 安装 NVIDIA Container Toolkit
+# 参考: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html
+
+# 运行 GPU 容器
+docker run --gpus all -p 8000:8000 \
+  -v /path/to/models:/app/models \
+  ghcr.io/hhongli1979-coder/telechat:latest-gpu
+```
+
+## 容器启动逻辑
+
+容器使用 `start.sh` 脚本自动检测并启动服务，优先级如下：
+
+1. **uvicorn api.proxy:app** - 如果存在 api/proxy.py
+2. **uvicorn main:app** - 如果存在 main.py 且包含 FastAPI
+3. **python deploy.py** - 如果存在 deploy.py
+4. **uvicorn service/telechat_service.py:app** - 如果存在 service/telechat_service.py
+5. **健康检查服务器** - 如果以上都不存在，启动简单的健康检查服务
+
+## 故障排查
+
+### 权限错误（GHCR）
+
+如果 GitHub Actions 推送镜像时出现权限错误：
+
+```
+Error: buildx failed with: error: failed to solve: failed to push ghcr.io/...
+```
+
+解决方法：
+1. 确认 Workflow permissions 设置为 "Read and write permissions"
+2. 或者创建 Personal Access Token with `write:packages` scope
+3. 将 PAT 添加为 secret `GHCR_TOKEN` 并更新 workflow 使用它
+
+### 构建超时
+
+GPU 镜像构建可能需要很长时间，特别是 flash-attn 的编译。建议：
+- 使用 Docker BuildKit 缓存
+- 在本地或专用 GPU 环境构建
+- 考虑使用预构建的 flash-attn wheel
+
+### 镜像过大
+
+如需减小镜像大小：
+- 使用 CPU 镜像（更小更快）
+- 在 `.dockerignore` 中排除不必要的文件
+- 考虑多阶段构建
+
+## 相关文件
+
+- `Dockerfile.full-gpu`: GPU 完整环境 Dockerfile
+- `Dockerfile.full-cpu`: CPU 轻量环境 Dockerfile
+- `.dockerignore`: Docker 构建忽略文件
+- `start.sh`: 容器启动脚本
+- `requirements.full.txt`: 完整依赖列表（GPU）
+- `requirements.server.txt`: 最小依赖列表（CPU）
+- `build-and-publish.sh`: 本地构建和发布脚本
+- `.github/workflows/publish-dockerhub.yml`: GitHub Actions 工作流
+
 # 声明、协议、引用
 ### 声明
 我们在此声明，不要使用TeleChat模型及其衍生模型进行任何危害国家社会安全或违法的活动。同时，我们也要求使用者不要将TeleChat模型用于没有安全审查和备案的互联网服务。我们希望所有使用者遵守上述原则，确保科技发展在合法合规的环境下进行。
