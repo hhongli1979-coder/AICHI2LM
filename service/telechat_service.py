@@ -107,10 +107,15 @@ def parse_data(dialog):
 @app.get('/health')
 async def health_check():
     """健康检查端点 - 用于容器编排和负载均衡器"""
+    from fastapi.responses import JSONResponse
+    
     try:
         # 检查模型是否加载
         if model is None or tokenizer is None:
-            return {"status": "unhealthy", "message": "Model not loaded"}
+            return JSONResponse(
+                status_code=503,
+                content={"status": "unhealthy", "message": "Model not loaded"}
+            )
         
         # 检查 GPU 是否可用（如果配置了 GPU）
         if torch.cuda.is_available():
@@ -122,17 +127,23 @@ async def health_check():
         else:
             gpu_status = {"gpu_available": False}
         
-        return {
-            "status": "healthy",
-            "service": "TeleChat API",
-            "model_loaded": True,
-            "gpu_info": gpu_status
-        }
+        return JSONResponse(
+            status_code=200,
+            content={
+                "status": "healthy",
+                "service": "TeleChat API",
+                "model_loaded": True,
+                "gpu_info": gpu_status
+            }
+        )
     except Exception as e:
-        return {
-            "status": "unhealthy",
-            "message": str(e)
-        }
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "unhealthy",
+                "message": str(e)
+            }
+        )
 
 
 @app.post('/telechat/gptDialog/v2')

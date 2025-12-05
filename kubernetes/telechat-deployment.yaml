@@ -28,7 +28,9 @@ spec:
   resources:
     requests:
       storage: 50Gi
-  storageClassName: standard
+  # Note: Update storageClassName to match your cluster's storage class
+  # Common values: standard, gp2, ssd, fast, or leave empty for default
+  # storageClassName: standard
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -41,7 +43,8 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: standard
+  # Note: Update storageClassName to match your cluster's storage class
+  # storageClassName: standard
 ---
 apiVersion: apps/v1
 kind: Deployment

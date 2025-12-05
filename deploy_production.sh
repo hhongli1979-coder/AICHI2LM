@@ -65,15 +65,15 @@ check_nvidia_docker() {
         return 1
     fi
     
-    # 检查 NVIDIA Container Toolkit
-    if ! docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi &> /dev/null; then
+    # 检查 Docker 是否支持 GPU（更高效的方法）
+    if docker info 2>&1 | grep -q "Runtimes.*nvidia"; then
+        print_success "GPU 支持检查通过"
+        return 0
+    else
         print_warning "NVIDIA Container Toolkit 未正确配置"
         print_info "安装指南: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html"
         return 1
     fi
-    
-    print_success "GPU 支持检查通过"
-    return 0
 }
 
 # 检查模型文件
