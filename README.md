@@ -754,3 +754,82 @@ TeleChat的分词算法是BBPE算法，该算法是字节级实现的分词算�
 }
 ```
 
+# Docker 容器部署 (Docker Container Deployment)
+
+TeleChat 提供了自动化容器镜像构建和发布功能，支持 CPU 和 GPU 环境。
+
+### Docker 镜像类型
+
+本项目提供两种 Docker 镜像：
+
+1. **CPU 镜像** (`Dockerfile.full-cpu`): 基于 `python:3.10-slim`，适用于轻量级推理服务
+   - 使用 `requirements.server.txt` 中的轻量级依赖
+   - 镜像体积较小，构建速度快
+   - 适合快速部署和测试
+
+2. **GPU 镜像** (`Dockerfile.full-gpu`): 基于 `pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime`
+   - 使用 `requirements.full.txt` 中的完整依赖
+   - ⚠️ **警告**: 构建需要较长时间，需要 GPU/CUDA 驱动支持
+   - 包含 DeepSpeed、FlashAttention 等重量级依赖
+   - 适合模型训练和 GPU 推理
+
+### 本地构建镜像
+
+使用提供的脚本手动构建和推送镜像：
+
+```bash
+# 构建并推送 CPU 镜像
+export DOCKERHUB_USERNAME=your-username
+export DOCKERHUB_TOKEN=your-token
+./build-and-publish.sh cpu
+
+# 构建并推送 GPU 镜像
+./build-and-publish.sh gpu
+```
+
+### 自动化 CI/CD 部署
+
+项目包含 GitHub Actions 工作流 (`.github/workflows/publish-dockerhub.yml`)，可在推送到 `master` 分支时自动构建和发布镜像。
+
+**配置步骤：**
+
+1. **配置 Docker Hub 凭据**（可选，用于推送到 Docker Hub）:
+   - 前往仓库的 Settings → Secrets and variables → Actions
+   - 添加两个 secrets:
+     - `DOCKERHUB_USERNAME`: 你的 Docker Hub 用户名
+     - `DOCKERHUB_TOKEN`: 你的 Docker Hub 访问令牌（在 Docker Hub 账户设置中生成）
+
+2. **启用 GitHub Container Registry (GHCR) 写入权限**:
+   - 前往仓库的 Settings → Actions → General
+   - 在 "Workflow permissions" 部分，选择 "Read and write permissions"
+   - 或者使用具有 `write:packages` 权限的 Personal Access Token (PAT)
+
+3. **触发构建**:
+   - 合并 PR 到 `master` 分支
+   - 工作流将自动构建 CPU 镜像并推送到：
+     - GHCR: `ghcr.io/<username>/aichi2lm:<commit-sha>`
+     - Docker Hub (如配置): `<username>/aichi2lm:latest`
+
+### 运行容器
+
+```bash
+# 运行 CPU 镜像
+docker run -p 8000:8000 hhongli1979-coder/aichi2lm:latest-cpu
+
+# 运行 GPU 镜像（需要 nvidia-docker）
+docker run --gpus all -p 8000:8000 hhongli1979-coder/aichi2lm:latest-gpu
+```
+
+容器启动后会自动检测并运行合适的入口点：
+1. 优先尝试 `api.proxy:app`
+2. 其次尝试 `main:app`
+3. 再次尝试 `deploy.py`
+4. 如果都不存在，启动健康检查服务器
+
+### 注意事项
+
+- **GPU 镜像构建时间**: 由于包含 flash-attn、auto-gptq 等需要编译的包，构建可能需要 30-60 分钟
+- **构建资源要求**: GPU 镜像构建建议在有 GPU 的环境中进行，某些包可能需要 CUDA 驱动
+- **镜像体积**: GPU 镜像体积较大（可能超过 10GB），请确保有足够的磁盘空间
+- **生产部署**: 建议根据实际需求调整 `start.sh` 入口点脚本和资源配置
+
