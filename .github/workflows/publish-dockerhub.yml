@@ -22,6 +22,9 @@ jobs:
     # To enable: Add DOCKERHUB_USERNAME and DOCKERHUB_TOKEN to repository secrets.
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     
+    permissions:
+      contents: read
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
