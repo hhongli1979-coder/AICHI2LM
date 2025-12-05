@@ -180,6 +180,23 @@ deploy.bat
 
 更多配置选项请参考：[**tutorial**](./docs/tutorial.md)
 
+#### 🐳 Docker 部署
+
+TeleChat 支持使用 Docker 容器化部署，提供开箱即用的环境：
+
+```bash
+# 使用 Docker Compose（推荐）
+docker-compose up -d
+
+# 查看日志
+docker-compose logs -f
+
+# 停止服务
+docker-compose down
+```
+
+更多 Docker 配置选项请参考：[**Docker 部署指南**](./DOCKER.md)
+
 #### 传统部署方式
 
 TeleChat也支持手动部署API和Web服务。目前仅提供简单的单卡单并发场景，用于演示和效果测试。详情参考快速上手手册：[**tutorial**](./docs/tutorial.md)
