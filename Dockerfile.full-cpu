@@ -1,0 +1,27 @@
+FROM python:3.10-slim
+
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+WORKDIR /app
+
+COPY . /app
+
+RUN apt-get update && apt-get install -y git build-essential curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+ARG REQ_FILE=requirements.server.txt
+RUN if [ -f "/app/$REQ_FILE" ]; then \
+      echo "Installing from $REQ_FILE"; \
+      pip --no-cache-dir install -r /app/$REQ_FILE ; \
+    elif [ -f "/app/requirements.txt" ]; then \
+      echo "Installing from requirements.txt"; \
+      pip --no-cache-dir install -r /app/requirements.txt ; \
+    else \
+      echo "No requirements file found; skipping pip install"; \
+    fi
+
+EXPOSE 8000
+
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+CMD ["/usr/local/bin/start.sh"]
