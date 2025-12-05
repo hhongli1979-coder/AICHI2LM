@@ -1,0 +1,135 @@
+name: Publish Docker Images
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  REGISTRY_DOCKERHUB: docker.io
+  REGISTRY_GHCR: ghcr.io
+  IMAGE_NAME: telechat
+
+jobs:
+  build-and-push-dockerhub:
+    name: Build and Push to Docker Hub (CPU)
+    runs-on: ubuntu-latest
+    # Note: This job will be skipped if Docker Hub secrets are not configured.
+    # To enable: Add DOCKERHUB_USERNAME and DOCKERHUB_TOKEN to repository secrets.
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check if Docker Hub credentials are available
+        id: check_dockerhub
+        run: |
+          if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" ] && [ -n "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
+            echo "available=true" >> $GITHUB_OUTPUT
+          else
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "Docker Hub credentials not configured, skipping..."
+          fi
+
+      - name: Set up Docker Buildx
+        if: steps.check_dockerhub.outputs.available == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: steps.check_dockerhub.outputs.available == 'true'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels)
+        if: steps.check_dockerhub.outputs.available == 'true'
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch,suffix=-cpu
+            type=semver,pattern={{version}},suffix=-cpu
+            type=semver,pattern={{major}}.{{minor}},suffix=-cpu
+            type=sha,suffix=-cpu
+
+      - name: Build and push CPU image to Docker Hub
+        if: steps.check_dockerhub.outputs.available == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.full-cpu
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  build-and-push-ghcr:
+    name: Build and Push to GitHub Container Registry
+    runs-on: ubuntu-latest
+    # Note: If this job fails with permissions error, you need to:
+    # 1. Go to repository Settings > Actions > General
+    # 2. Under "Workflow permissions", select "Read and write permissions"
+    # 3. Save the settings and re-run the workflow
+    # 
+    # Alternatively, create a Personal Access Token with write:packages scope:
+    # 1. Go to Settings > Developer settings > Personal access tokens > Tokens (classic)
+    # 2. Generate new token with 'write:packages' and 'read:packages' scopes
+    # 3. Add it as repository secret named GHCR_TOKEN
+    # 4. Update this workflow to use secrets.GHCR_TOKEN instead of secrets.GITHUB_TOKEN
+    
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY_GHCR }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for GHCR (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY_GHCR }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch,suffix=-cpu
+            type=semver,pattern={{version}},suffix=-cpu
+            type=semver,pattern={{major}}.{{minor}},suffix=-cpu
+            type=sha,prefix={{branch}}-,suffix=-cpu
+            type=raw,value=latest-cpu,enable={{is_default_branch}}
+
+      - name: Build and push CPU image to GHCR
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.full-cpu
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Add package metadata
+        run: |
+          echo "Docker image published to GitHub Container Registry"
+          echo "Pull with: docker pull ${{ env.REGISTRY_GHCR }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest-cpu"

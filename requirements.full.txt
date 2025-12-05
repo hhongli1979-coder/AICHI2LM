@@ -1,0 +1,30 @@
+# TeleChat Full Requirements
+# WARNING: This requirements file includes ALL dependencies for training, inference, and evaluation.
+# - Build time: 30-60 minutes depending on connection speed
+# - GPU requirement: Building flash-attn requires NVIDIA GPU with CUDA support
+# - Image size: ~10GB+ after installation
+# - Some packages (flash-attn, auto-gptq) may require compilation and will fail on CPU-only systems
+#
+# For CPU-only or lightweight API deployments, use requirements.server.txt instead.
+
+# Core deep learning and training dependencies
+accelerate>=0.24.1
+auto-gptq==0.3.0
+deepspeed==0.8.3
+datasets>=2.10.1
+flash-attn                    # Requires GPU for installation
+jsonlines
+peft>=0.5.0
+safetensors>=0.3.1
+torch==1.13.1
+transformers==4.30.0
+
+# API and web service dependencies
+fastapi>=0.109.1
+uvicorn==0.17.6
+streamlit>=1.30.0
+
+# Utility dependencies
+pyyaml>=6.0
+psutil>=5.9.0
+requests>=2.28.0
