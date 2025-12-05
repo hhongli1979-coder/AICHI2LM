@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Docker Registry with authentication
+  registry:
+    image: registry:2
+    container_name: telechat-registry
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+    volumes:
+      - ./registry/data:/var/lib/registry
+      - ./registry/auth:/auth
+    networks:
+      - registry-network
+
+  # Registry UI for easy management
+  registry-ui:
+    image: joxit/docker-registry-ui:latest
+    container_name: telechat-registry-ui
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      - SINGLE_REGISTRY=true
+      - REGISTRY_TITLE=TeleChat Docker Registry
+      - REGISTRY_URL=http://registry:5000
+      - DELETE_IMAGES=true
+      - SHOW_CONTENT_DIGEST=true
+      - NGINX_PROXY_PASS_URL=http://registry:5000
+      - SHOW_CATALOG_NB_TAGS=true
+      - CATALOG_MIN_BRANCHES=1
+      - CATALOG_MAX_BRANCHES=1
+      - TAGLIST_PAGE_SIZE=100
+      - CATALOG_ELEMENTS_LIMIT=1000
+    depends_on:
+      - registry
+    networks:
+      - registry-network
+
+  # TeleChat model service (optional)
+  telechat-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: telechat-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    volumes:
+      - ./models:/workspace/models
+      - ./service:/workspace/service
+    networks:
+      - registry-network
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+networks:
+  registry-network:
+    driver: bridge
