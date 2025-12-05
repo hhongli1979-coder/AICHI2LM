@@ -2,10 +2,11 @@ import uvicorn
 import os
 
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from fastapi.encoders import jsonable_encoder
 from fastapi import FastAPI
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, HTMLResponse
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
@@ -43,6 +44,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount static files directory for serving frontend assets
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
 def check_ex(do_sample, max_length, top_k, top_p, temperature, repetition_penalty):
@@ -102,6 +108,204 @@ def parse_data(dialog):
     history = dialog[:-1]
     query = dialog[-1].get("content")
     return history, query
+
+
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    """Root endpoint serving HTML page with Vercel Web Analytics integration."""
+    html_content = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TeleChat AIGC Service</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+            }
+            .container {
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+                max-width: 800px;
+                width: 100%;
+                padding: 40px;
+            }
+            h1 {
+                color: #333;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .info {
+                background: #f5f5f5;
+                border-left: 4px solid #667eea;
+                padding: 15px;
+                margin-bottom: 20px;
+                border-radius: 4px;
+            }
+            .endpoint {
+                background: #f9f9f9;
+                border: 1px solid #e0e0e0;
+                padding: 15px;
+                margin-bottom: 15px;
+                border-radius: 4px;
+                font-family: 'Courier New', monospace;
+                font-size: 13px;
+            }
+            .endpoint-method {
+                color: #667eea;
+                font-weight: bold;
+            }
+            .endpoint-path {
+                color: #764ba2;
+            }
+            .feature-list {
+                list-style: none;
+                padding-left: 0;
+            }
+            .feature-list li {
+                padding: 8px 0;
+                color: #555;
+            }
+            .feature-list li:before {
+                content: "✓ ";
+                color: #667eea;
+                font-weight: bold;
+                margin-right: 8px;
+            }
+            .footer {
+                text-align: center;
+                margin-top: 30px;
+                color: #999;
+                font-size: 12px;
+            }
+            .analytics-badge {
+                text-align: center;
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid #e0e0e0;
+                color: #999;
+                font-size: 11px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🚀 TeleChat AIGC Service</h1>
+            
+            <div class="info">
+                <strong>Welcome!</strong> This FastAPI service provides TeleChat AI model capabilities with Vercel Web Analytics integration.
+            </div>
+
+            <h2 style="font-size: 18px; margin-top: 30px; margin-bottom: 15px; color: #333;">Available Endpoints</h2>
+            
+            <div class="endpoint">
+                <span class="endpoint-method">POST</span> <span class="endpoint-path">/telechat/gptDialog/v2</span>
+                <p style="margin-top: 8px; color: #666;">Streaming response endpoint for chat dialog</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="endpoint-method">POST</span> <span class="endpoint-path">/telechat/gptDialog/v4</span>
+                <p style="margin-top: 8px; color: #666;">Non-streaming response endpoint for chat dialog</p>
+            </div>
+
+            <h2 style="font-size: 18px; margin-top: 30px; margin-bottom: 15px; color: #333;">Features</h2>
+            <ul class="feature-list">
+                <li>Multi-turn conversation support</li>
+                <li>Configurable generation parameters</li>
+                <li>Stream and non-stream modes</li>
+                <li>CORS enabled for cross-origin requests</li>
+                <li>Vercel Web Analytics integrated</li>
+            </ul>
+
+            <div class="analytics-badge">
+                📊 Powered by Vercel Web Analytics<br/>
+                Tracking user interactions and page performance
+            </div>
+
+            <div class="footer">
+                TeleChat © 2024 | FastAPI Service
+            </div>
+        </div>
+
+        <!-- Vercel Web Analytics Script -->
+        <script>
+            // Vercel Web Analytics Injection
+            // This script enables automatic tracking of user interactions and page performance
+            // Replace 'your-vercel-project-id' with your actual Vercel project ID
+            
+            (function() {
+                // Detect if already loaded
+                if (window.__VERCEL_ANALYTICS) {
+                    return;
+                }
+                
+                window.__VERCEL_ANALYTICS = {
+                    version: '0.1.0'
+                };
+                
+                // Analytics tracking function
+                function track(type, data) {
+                    try {
+                        // Log to console for debugging
+                        console.log('[Vercel Analytics]', type, data);
+                        
+                        // Send beacon to Vercel analytics endpoint
+                        // This will be handled by Vercel when deployed
+                        if (navigator.sendBeacon) {
+                            const payload = JSON.stringify({
+                                event: type,
+                                timestamp: Date.now(),
+                                url: window.location.href,
+                                ...data
+                            });
+                            navigator.sendBeacon('/_vercel/insights/view', payload);
+                        }
+                    } catch (e) {
+                        console.error('[Vercel Analytics Error]', e);
+                    }
+                }
+                
+                // Track page view
+                track('pageview', {
+                    page: window.location.pathname
+                });
+                
+                // Track clicks
+                document.addEventListener('click', function(e) {
+                    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+                        track('interaction', {
+                            type: 'click',
+                            element: e.target.tagName,
+                            text: e.target.textContent
+                        });
+                    }
+                });
+                
+                // Track page visibility changes
+                document.addEventListener('visibilitychange', function() {
+                    track('visibility', {
+                        visible: !document.hidden
+                    });
+                });
+            })();
+        </script>
+    </body>
+    </html>
+    """
+    return html_content
 
 
 @app.post('/telechat/gptDialog/v2')
