@@ -82,7 +82,7 @@ jobs:
       
       - name: Build and push Docker image
         if: steps.check_secrets.outputs.skip == 'false'
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ${{ steps.dockerfile.outputs.dockerfile }}
@@ -159,7 +159,7 @@ jobs:
           fi
       
       - name: Build and push Docker image to GHCR
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ${{ steps.dockerfile.outputs.dockerfile }}
