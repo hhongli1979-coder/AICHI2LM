@@ -182,20 +182,27 @@ deploy.bat
 
 #### 🐳 Docker 部署
 
-TeleChat 支持使用 Docker 容器化部署，提供开箱即用的环境：
+**安装命令（复制执行）：**
 
 ```bash
-# 使用 Docker Compose（推荐）
-docker-compose up -d
+# 1. 安装 Docker
+curl -fsSL https://get.docker.com | sudo sh
+sudo usermod -aG docker $USER && newgrp docker
 
-# 查看日志
-docker-compose logs -f
+# 2. 安装 GPU 支持
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg && distribution=$(. /etc/os-release;echo $ID$VERSION_ID) && curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list && sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit && sudo systemctl restart docker
 
-# 停止服务
-docker-compose down
+# 3. 克隆项目并启动
+git clone https://github.com/hhongli1979-coder/AICHI2LM.git
+cd AICHI2LM
+mkdir -p models/7B
+# 把模型文件放到 models/7B 目录
+docker compose up -d
 ```
 
-更多 Docker 配置选项请参考：[**Docker 部署指南**](./DOCKER.md)
+**访问：** http://localhost:8070/docs (API) | http://localhost:8501 (Web)
+
+更多选项：[命令.txt](./命令.txt) | [INSTALL_STEPS.md](./INSTALL_STEPS.md) | [DOCKER.md](./DOCKER.md)
 
 #### 传统部署方式
 

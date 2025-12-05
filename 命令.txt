@@ -1,0 +1,27 @@
+# 复制粘贴以下命令，一行一行执行
+
+# 1. 安装 Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
+newgrp docker
+
+# 2. 安装 GPU 支持
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
+
+# 3. 下载项目
+git clone https://github.com/hhongli1979-coder/AICHI2LM.git
+cd AICHI2LM
+
+# 4. 准备模型（把你的模型文件放到 models/7B 目录）
+mkdir -p models/7B
+
+# 5. 启动（必须在 AICHI2LM 目录里执行）
+docker compose up -d
+
+# 访问：http://localhost:8070/docs 和 http://localhost:8501

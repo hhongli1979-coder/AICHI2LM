@@ -4,6 +4,88 @@
 
 本指南提供使用 Docker 部署 TeleChat 模型服务的方法，支持快速启动和环境隔离。
 
+## 📋 完整安装步骤（从零开始）
+
+### 第一步：安装 Docker 和 Docker Compose
+
+```bash
+# 更新系统包
+sudo apt-get update
+
+# 安装 Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+# 启动 Docker 服务
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# 将当前用户添加到 docker 组（避免每次使用 sudo）
+sudo usermod -aG docker $USER
+
+# 注意：添加到组后需要重新登录才能生效
+# 或者使用: newgrp docker
+```
+
+### 第二步：安装 NVIDIA Container Toolkit（GPU 支持）
+
+```bash
+# 添加 NVIDIA 仓库密钥
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+
+# 添加 NVIDIA 仓库
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+# 安装
+sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+
+# 重启 Docker 服务
+sudo systemctl restart docker
+
+# 验证 GPU 支持
+docker run --rm --gpus all nvidia/cuda:11.8.0-base nvidia-smi
+```
+
+### 第三步：克隆项目并准备模型
+
+```bash
+# 克隆项目（如果还没有克隆）
+git clone https://github.com/hhongli1979-coder/AICHI2LM.git
+cd AICHI2LM
+
+# 下载模型文件到 models 目录
+# 例如：将 TeleChat-7B 模型下载到 models/7B 目录
+mkdir -p models/7B
+# 下载你的模型文件到 models/7B 目录
+```
+
+### 第四步：启动服务
+
+**重要：必须在项目根目录（包含 docker-compose.yml 的目录）执行以下命令**
+
+```bash
+# 确认当前在项目根目录
+pwd  # 应该显示 .../AICHI2LM
+
+# 确认 docker-compose.yml 文件存在
+ls docker-compose.yml
+
+# 启动服务
+docker-compose up -d
+
+# 查看日志
+docker-compose logs -f
+```
+
+### 第五步：访问服务
+
+- API 文档: http://localhost:8070/docs
+- Web 界面: http://localhost:8501
+
 ## 前置要求
 
 1. **Docker**: 版本 20.10 或更高
