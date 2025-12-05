@@ -1,0 +1,35 @@
+# TeleChat Full CPU Dockerfile
+# Lightweight CPU-only image for inference and API serving
+
+FROM python:3.10-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    wget \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy repository files
+COPY . /app
+
+# Install Python dependencies
+# Prefer requirements.server.txt if present, otherwise fallback to requirements.txt
+RUN if [ -f requirements.server.txt ]; then \
+        pip install --no-cache-dir -r requirements.server.txt; \
+    else \
+        pip install --no-cache-dir -r requirements.txt; \
+    fi
+
+# Copy entrypoint script
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# Expose port
+EXPOSE 8000
+
+# Set entrypoint
+ENTRYPOINT ["/usr/local/bin/start.sh"]

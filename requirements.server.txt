@@ -1,0 +1,25 @@
+# TeleChat Minimal Server Dependencies
+# ===============================================================================
+# Lightweight runtime dependencies for CPU inference and API serving
+# Suitable for deployment environments without GPU or training requirements
+# ===============================================================================
+
+# API and serving
+fastapi>=0.109.1
+uvicorn>=0.17.6
+
+# HTTP client for proxy/forwarding
+httpx>=0.24.0
+
+# Model inference (CPU-compatible)
+transformers>=4.30.0
+safetensors>=0.3.1
+
+# Utilities
+pyyaml>=6.0
+requests>=2.28.0
+
+# Optional: Uncomment below to install PyTorch CPU version
+# This reduces image size significantly by avoiding CUDA dependencies
+# To install, run: pip install --extra-index-url https://download.pytorch.org/whl/cpu torch>=1.13.1
+# Or add to pip install: torch>=1.13.1 --extra-index-url https://download.pytorch.org/whl/cpu

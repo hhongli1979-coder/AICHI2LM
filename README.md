@@ -738,6 +738,123 @@ TeleChat的分词算法是BBPE算法，该算法是字节级实现的分词算�
 
 我们已经尽我们所能，来确保模型训练过程中使用的数据的合规性。然而，尽管我们已经做出了巨大的努力，但由于模型和数据的复杂性，仍有可能存在一些无法预见的问题。因此，如果由于使用TeleChat开源模型而导致的任何问题，包括但不限于数据安全问题、公共舆论风险，或模型被误导、滥用、传播或不当利用所带来的任何风险和问题，我们将不承担任何责任。
 
+# Docker 部署 / Docker Deployment
+
+本仓库提供了自动化的 Docker 镜像构建和发布支持，可以快速部署 TeleChat 模型服务。
+
+## Docker 镜像说明
+
+我们提供两种 Docker 镜像变体：
+
+### 1. CPU 镜像 (Dockerfile.full-cpu)
+- **基础镜像**: `python:3.10-slim`
+- **用途**: 轻量级 CPU 推理和 API 服务
+- **依赖**: 使用 `requirements.server.txt` 的最小运行时依赖
+- **大小**: 较小 (~2-3GB)
+- **构建时间**: 快速 (5-10 分钟)
+
+### 2. GPU 镜像 (Dockerfile.full-gpu)
+- **基础镜像**: `pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime`
+- **用途**: GPU 加速训练和推理
+- **依赖**: 使用 `requirements.full.txt` 的完整依赖（包括 flash-attn, auto-gptq, deepspeed）
+- **大小**: 较大 (~10GB+)
+- **构建时间**: 较长 (30-60+ 分钟)
+- **⚠️ 警告**: 某些依赖需要 GPU 环境编译，可能在纯 CPU 系统上构建失败
+
+## 自动化发布
+
+### GitHub Container Registry (GHCR)
+当代码推送到 `main` 或 `master` 分支时，GitHub Actions 会自动构建并发布 Docker 镜像到 GitHub Container Registry (ghcr.io)。
+
+**镜像地址**:
+```
+ghcr.io/hhongli1979-coder/aichi2lm:latest-cpu
+ghcr.io/hhongli1979-coder/aichi2lm:sha-<commit>-cpu
+```
+
+**使用方法**:
+```bash
+# 拉取镜像
+docker pull ghcr.io/hhongli1979-coder/aichi2lm:latest-cpu
+
+# 运行容器
+docker run -p 8000:8000 ghcr.io/hhongli1979-coder/aichi2lm:latest-cpu
+```
+
+**权限配置**:
+GHCR 发布使用默认的 `GITHUB_TOKEN`，已在工作流中配置了必要的 `packages: write` 权限。如果遇到权限问题：
+1. 进入仓库 Settings > Actions > General
+2. 在 "Workflow permissions" 下选择 "Read and write permissions"
+3. 或创建具有 `write:packages` 权限的 Personal Access Token (PAT) 并添加为密钥
+
+### Docker Hub (可选)
+如果您想发布到 Docker Hub，需要配置以下 GitHub Secrets：
+- `DOCKERHUB_USERNAME`: 您的 Docker Hub 用户名
+- `DOCKERHUB_TOKEN`: 您的 Docker Hub 访问令牌
+
+**配置步骤**:
+1. 在 Docker Hub 创建访问令牌: Settings > Security > New Access Token
+2. 在 GitHub 仓库中添加 Secrets: Settings > Secrets and variables > Actions > New repository secret
+   - 添加 `DOCKERHUB_USERNAME` (您的 Docker Hub 用户名)
+   - 添加 `DOCKERHUB_TOKEN` (访问令牌)
+3. 推送代码到 `main` 或 `master` 分支，工作流将自动构建并发布
+
+## 本地构建和发布
+
+### 使用构建脚本
+```bash
+# 构建并发布 CPU 镜像
+export DOCKERHUB_USERNAME=your-username
+export DOCKERHUB_TOKEN=your-token
+./build-and-publish.sh cpu latest
+
+# 构建并发布 GPU 镜像
+./build-and-publish.sh gpu latest
+```
+
+### 手动构建
+```bash
+# 构建 CPU 镜像
+docker build -f Dockerfile.full-cpu -t telechat:latest-cpu .
+
+# 构建 GPU 镜像
+docker build -f Dockerfile.full-gpu -t telechat:latest-gpu .
+
+# 运行容器
+docker run -p 8000:8000 telechat:latest-cpu
+```
+
+## 镜像使用说明
+
+Docker 镜像使用智能入口点脚本 (`start.sh`)，会自动检测并启动可用的服务：
+
+1. **优先级 1**: 尝试启动 `uvicorn api.proxy:app`（如果存在 api/proxy.py）
+2. **优先级 2**: 尝试启动 `uvicorn main:app`（如果存在 main.py）
+3. **优先级 3**: 尝试运行 `deploy.py`（部署脚本）
+4. **优先级 4**: 尝试启动 `service/telechat_service.py`
+5. **降级方案**: 启动健康检查服务器（端口 8000）
+
+**环境变量**:
+- `MODEL_PATH`: 模型文件路径（默认: ../models/7B）
+- `CUDA_VISIBLE_DEVICES`: GPU 设备选择（默认: 0）
+
+**挂载模型**:
+```bash
+docker run -p 8000:8000 \
+  -v /path/to/models:/app/models \
+  -e MODEL_PATH=/app/models/7B \
+  ghcr.io/hhongli1979-coder/aichi2lm:latest-cpu
+```
+
+## 注意事项
+
+1. **模型不包含在镜像中**: 出于体积考虑，Docker 镜像不包含模型权重文件。需要在运行时通过卷挂载提供模型文件。
+2. **GPU 支持**: GPU 镜像需要在支持 NVIDIA GPU 的主机上运行，并安装 nvidia-docker。
+3. **构建时间**: GPU 镜像构建时间较长，建议使用 CI/CD 自动构建。
+4. **镜像大小**: GPU 镜像体积较大，下载和存储需要足够的磁盘空间。
+
+---
+
 ### 协议
 社区使用 TeleChat 模型需要遵循《[TeleChat模型社区许可协议](./TeleChat模型社区许可协议.pdf)》。TeleChat模型支持商业用途，如果您计划将 TeleChat 模型或其衍生品用于商业目的，您需要通过以下联系邮箱 tele_ai@chinatelecom.cn，提交《TeleChat模型社区许可协议》要求的申请材料。审核通过后，将特此授予您一个非排他性、全球性、不可转让、不可再许可、可撤销的商用版权许可。
 
