@@ -754,3 +754,110 @@ TeleChat的分词算法是BBPE算法，该算法是字节级实现的分词算�
 }
 ```
 
+# Docker 容器化部署
+
+TeleChat 现已支持 Docker 容器化部署，提供自动化构建和发布流程。
+
+## Docker 镜像
+
+我们提供两种 Docker 镜像变体：
+
+### GPU 版本 (Dockerfile.full-gpu)
+- 基于 `pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime`
+- 包含完整依赖（accelerate, auto-gptq, deepspeed, flash-attn 等）
+- 需要 NVIDIA GPU 和 CUDA 11.6+ 支持
+- 镜像大小约 10+ GB
+- 构建时间约 30+ 分钟
+
+### CPU 版本 (Dockerfile.full-cpu)
+- 基于 `python:3.10-slim`
+- 轻量级运行时依赖
+- 适用于 CPU 推理场景
+- 性能较 GPU 版本显著降低
+- 构建时间约 15-20 分钟
+
+## 本地构建与发布
+
+使用 `build-and-publish.sh` 脚本可以在本地构建并发布镜像到 Docker Hub：
+
+```bash
+# 设置 Docker Hub 凭证
+export DOCKERHUB_USERNAME=your-username
+export DOCKERHUB_TOKEN=your-token
+
+# 构建并推送 CPU 版本
+./build-and-publish.sh cpu
+
+# 构建并推送 GPU 版本
+./build-and-publish.sh gpu
+```
+
+**注意**: 必须设置 `DOCKERHUB_USERNAME` 和 `DOCKERHUB_TOKEN` 环境变量，否则脚本会提前失败。
+
+## GitHub Actions 自动化
+
+项目配置了 GitHub Actions 工作流 (`.github/workflows/publish-dockerhub.yml`)，可在推送到 master 分支时自动构建和发布镜像。
+
+### 配置步骤
+
+#### 1. 启用 GitHub Container Registry (GHCR) 推送
+
+**选项 A: 使用 GITHUB_TOKEN (推荐)**
+1. 进入仓库 **Settings → Actions → General**
+2. 在 "Workflow permissions" 下选择 **"Read and write permissions"**
+3. 保存更改
+
+**选项 B: 使用 Personal Access Token (PAT)**
+1. 创建一个具有 `packages:write` 权限的 PAT
+2. 在仓库中添加 secret: **Settings → Secrets and variables → Actions → New repository secret**
+   - 名称: `GHCR_TOKEN`
+   - 值: 您的 PAT
+3. 修改工作流以使用 `GHCR_TOKEN` 而不是 `GITHUB_TOKEN`
+
+#### 2. 配置 Docker Hub (可选)
+
+如果需要同时推送到 Docker Hub，请添加以下 secrets：
+
+1. **Settings → Secrets and variables → Actions → New repository secret**
+2. 添加两个 secrets:
+   - `DOCKERHUB_USERNAME`: 您的 Docker Hub 用户名
+   - `DOCKERHUB_TOKEN`: 您的 Docker Hub 访问令牌
+
+#### 3. 触发构建
+
+合并 docker-image 分支到 master 即可触发自动构建：
+
+```bash
+git checkout master
+git merge docker-image
+git push origin master
+```
+
+工作流将自动：
+- 构建 CPU 版本镜像
+- 推送到 GHCR: `ghcr.io/<owner>/aichi2lm:latest-cpu` 和 `ghcr.io/<owner>/aichi2lm:<commit-sha>`
+- 如果配置了 Docker Hub secrets，同时推送到 Docker Hub
+
+## 使用 Docker 镜像
+
+```bash
+# 从 GHCR 拉取
+docker pull ghcr.io/<owner>/aichi2lm:latest-cpu
+
+# 从 Docker Hub 拉取（如果已发布）
+docker pull <username>/aichi2lm:latest-cpu
+
+# 运行容器
+docker run -d -p 8000:8000 \
+  -v /path/to/models:/app/models \
+  ghcr.io/<owner>/aichi2lm:latest-cpu
+```
+
+## 注意事项
+
+- **模型文件**: Docker 镜像不包含模型权重文件。需要在运行时通过卷挂载或下载提供
+- **GPU 支持**: GPU 版本需要安装 NVIDIA Docker runtime
+- **资源需求**: GPU 版本至少需要 16GB GPU 显存
+- **网络**: 首次运行可能需要下载模型文件，请确保网络畅通
+- **凭证安全**: 切勿在 Dockerfile 或代码中包含任何凭证
+

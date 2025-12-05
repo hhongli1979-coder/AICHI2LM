@@ -1,0 +1,38 @@
+# Dockerfile.full-cpu
+# WARNING: This image is optimized for CPU inference only
+# WARNING: Build time may take 15-20 minutes depending on dependencies
+# WARNING: Performance will be significantly slower than GPU version
+
+FROM python:3.10-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    wget \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the entire repository
+COPY . /app/
+
+# Install Python dependencies
+# Prefer requirements.server.txt for CPU if available, otherwise requirements.txt
+RUN if [ -f requirements.server.txt ]; then \
+        pip install --no-cache-dir -r requirements.server.txt; \
+    else \
+        pip install --no-cache-dir -r requirements.txt; \
+    fi
+
+# Copy and set entrypoint script permissions
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# Expose API port
+EXPOSE 8000
+
+# Set entrypoint
+ENTRYPOINT ["/usr/local/bin/start.sh"]
