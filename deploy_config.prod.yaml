@@ -1,0 +1,38 @@
+# TeleChat 生产环境配置文件
+# TeleChat Production Environment Configuration
+
+# 模型路径 (容器内路径)
+# Model path (path inside container)
+model_path: '/app/models/7B'
+
+# API 服务配置
+# API service configuration
+api_host: '0.0.0.0'
+api_port: 8070
+
+# Web 服务配置
+# Web service configuration
+web_host: '0.0.0.0'
+web_port: 8501
+
+# GPU 设备配置
+# GPU device configuration
+gpu_devices: '0'
+
+# 服务启动检查间隔 (秒)
+# Service startup check interval (seconds)
+check_interval: 3
+
+# 最大等待时间 (秒)
+# Maximum wait time (seconds)
+max_wait_time: 120
+
+# 日志配置
+# Logging configuration
+log_level: 'INFO'
+log_dir: '/app/logs'
+
+# 性能配置
+# Performance configuration
+max_workers: 4
+timeout: 600

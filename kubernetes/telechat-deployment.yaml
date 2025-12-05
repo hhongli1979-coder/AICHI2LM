@@ -1,0 +1,196 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: telechat
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: telechat-config
+  namespace: telechat
+data:
+  MODEL_PATH: "/app/models/7B"
+  CUDA_VISIBLE_DEVICES: "0"
+  API_PORT: "8070"
+  WEB_PORT: "8501"
+  LOG_LEVEL: "INFO"
+  PYTHONUNBUFFERED: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: telechat-models-pvc
+  namespace: telechat
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: standard
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: telechat-logs-pvc
+  namespace: telechat
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: standard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telechat-deployment
+  namespace: telechat
+  labels:
+    app: telechat
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: telechat
+  template:
+    metadata:
+      labels:
+        app: telechat
+    spec:
+      containers:
+      - name: telechat
+        image: telechat:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: api
+          containerPort: 8070
+          protocol: TCP
+        - name: web
+          containerPort: 8501
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: telechat-config
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+            memory: "32Gi"
+            cpu: "8"
+          requests:
+            nvidia.com/gpu: 1
+            memory: "16Gi"
+            cpu: "4"
+        volumeMounts:
+        - name: models
+          mountPath: /app/models
+          readOnly: true
+        - name: logs
+          mountPath: /app/logs
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8070
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8070
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: telechat-models-pvc
+      - name: logs
+        persistentVolumeClaim:
+          claimName: telechat-logs-pvc
+      nodeSelector:
+        accelerator: nvidia-gpu
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: telechat-service
+  namespace: telechat
+  labels:
+    app: telechat
+spec:
+  type: LoadBalancer
+  selector:
+    app: telechat
+  ports:
+  - name: api
+    port: 8070
+    targetPort: 8070
+    protocol: TCP
+  - name: web
+    port: 8501
+    targetPort: 8501
+    protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: telechat-ingress
+  namespace: telechat
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+  - hosts:
+    - telechat.example.com
+    secretName: telechat-tls
+  rules:
+  - host: telechat.example.com
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: telechat-service
+            port:
+              number: 8070
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: telechat-service
+            port:
+              number: 8501
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: telechat-hpa
+  namespace: telechat
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: telechat-deployment
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
