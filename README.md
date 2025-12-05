@@ -1,3 +1,29 @@
+# 🚀 TeleChat Docker 快速部署
+
+> **📖 [查看快速开始指南 (QUICK_START.md)](./QUICK_START.md)** - 5分钟完成部署！
+
+## 三步启动
+
+```bash
+# 1. 克隆项目
+cd /www/wwwroot
+git clone https://github.com/hhongli1979-coder/AICHI2LM.git
+cd AICHI2LM
+
+# 2. 准备模型
+mkdir -p models/7B
+# 复制模型文件到 models/7B/
+
+# 3. 启动服务
+docker compose up -d
+```
+
+**访问**: http://localhost:8070/docs (API) | http://localhost:8501 (Web)
+
+**详细安装文档**: [QUICK_START.md](./QUICK_START.md) | [命令.txt](./命令.txt) | [DOCKER.md](./DOCKER.md)
+
+---
+
 理解问题和存储库结构清单项
 了解问题和存储库结构
 为高级人工智能技术集成（前沿智能技术集成）清单项创建文档文件

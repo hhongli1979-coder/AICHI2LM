@@ -14,14 +14,25 @@ sudo apt-get update
 sudo apt-get install -y nvidia-container-toolkit
 sudo systemctl restart docker
 
-# 3. 下载项目
+# 3. 进入你要安装的目录（例如 /www/wwwroot）
+cd /www/wwwroot
+
+# 4. 下载项目
 git clone https://github.com/hhongli1979-coder/AICHI2LM.git
+
+# 5. 进入项目目录（重要！）
 cd AICHI2LM
 
-# 4. 准备模型（把你的模型文件放到 models/7B 目录）
+# 6. 准备模型（把你的模型文件放到 models/7B 目录）
 mkdir -p models/7B
+# 复制模型：cp -r /your/model/path/* models/7B/
 
-# 5. 启动（必须在 AICHI2LM 目录里执行）
+# 7. 启动（必须在 AICHI2LM 目录里执行）
 docker compose up -d
 
 # 访问：http://localhost:8070/docs 和 http://localhost:8501
+
+# 常用命令（都要在 AICHI2LM 目录下执行）：
+# 查看日志：docker compose logs -f
+# 停止服务：docker compose down
+# 重启服务：docker compose restart
