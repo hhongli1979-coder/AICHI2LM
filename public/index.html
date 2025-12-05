@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AICHI-2-LM: Advanced Intelligent Conversational Humanoid Integration 2 - Language Model">
+    <title>AICHI-2-LM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 16px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 24px;
+            font-size: 16px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+        
+        .info-item {
+            background: #f5f5f5;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info-item h3 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .info-item p {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .status {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            color: #0369a1;
+        }
+        
+        .status.active {
+            background: #f0fdf4;
+            border-color: #22c55e;
+            color: #166534;
+        }
+        
+        .links {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .link-btn {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .link-btn:hover {
+            background: #764ba2;
+        }
+        
+        .link-btn.secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .link-btn.secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .footer {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AICHI-2-LM</h1>
+        <p class="subtitle">Advanced Intelligent Conversational Humanoid Integration 2 - Language Model</p>
+        
+        <div class="status active">
+            <strong>✅ Analytics Active</strong> - Vercel Web Analytics is enabled for this application
+        </div>
+        
+        <div class="info-grid">
+            <div class="info-item">
+                <h3>📊 API Service</h3>
+                <p>FastAPI backend running on port 8070. Provides LLM inference and chat capabilities.</p>
+            </div>
+            <div class="info-item">
+                <h3>🌐 Web Interface</h3>
+                <p>Streamlit web UI available on port 8501 for interactive conversations.</p>
+            </div>
+            <div class="info-item">
+                <h3>📈 Analytics</h3>
+                <p>Vercel Web Analytics tracking page performance and user interactions in real-time.</p>
+            </div>
+            <div class="info-item">
+                <h3>🚀 Deployment</h3>
+                <p>Ready for deployment to Vercel or your preferred hosting platform.</p>
+            </div>
+        </div>
+        
+        <div class="links">
+            <a href="http://localhost:8070/docs" class="link-btn" target="_blank">📖 API Documentation</a>
+            <a href="http://localhost:8501" class="link-btn secondary" target="_blank">💬 Web Demo</a>
+        </div>
+        
+        <div class="footer">
+            <p>AICHI-2-LM with Vercel Web Analytics • TeleChat Model</p>
+        </div>
+    </div>
+    
+    <!-- Import and initialize the application with analytics -->
+    <script type="module">
+        import { initializeApp } from './app.js';
+        // App initialization happens automatically on load
+    </script>
+</body>
+</html>
