@@ -32,7 +32,7 @@ TeleChat Docker 镜像仓库管理系统是一个用于管理 Docker 镜像并�
 
 1. **克隆仓库**
 ```bash
-git clone https://github.com/hhongli1979-coder/AICHI2LM.git
+git clone <your-repository-url>
 cd AICHI2LM
 ```
 
@@ -71,15 +71,20 @@ python3 registry_cli.py user add <username> <password> --permissions <权限列�
 
 **示例:**
 ```bash
-# 添加管理员
-python3 registry_cli.py user add admin admin123 --permissions admin --email admin@example.com
+# 添加管理员 (请使用强密码)
+python3 registry_cli.py user add admin <STRONG_PASSWORD> --permissions admin --email admin@example.com
 
-# 添加只读用户
-python3 registry_cli.py user add user1 pass123 --permissions view,pull --email user1@example.com
+# 添加只读用户 (请使用强密码)
+python3 registry_cli.py user add user1 <STRONG_PASSWORD> --permissions view,pull --email user1@example.com
 
-# 添加可以推送的用户
-python3 registry_cli.py user add developer dev456 --permissions view,pull,push --email dev@example.com
+# 添加可以推送的用户 (请使用强密码)
+python3 registry_cli.py user add developer <STRONG_PASSWORD> --permissions view,pull,push --email dev@example.com
 ```
+
+**安全提示:**
+- 始终使用强密码（至少 12 个字符，包含大小写字母、数字和特殊字符）
+- 不要在命令历史中保留密码，考虑使用密码管理器
+- 定期更新密码
 
 ### 列出所有用户
 
@@ -407,11 +412,67 @@ sudo yum install httpd-tools
 
 ## 安全建议
 
-1. **使用强密码** - 为所有用户设置强密码
-2. **最小权限原则** - 只授予用户必要的权限
-3. **定期审计** - 定期检查用户权限和镜像访问记录
-4. **HTTPS** - 在生产环境中使用 HTTPS
-5. **备份** - 定期备份配置文件和镜像数据
+### 密码安全
+
+1. **使用强密码**
+   - 至少 12 个字符
+   - 包含大小写字母、数字和特殊字符
+   - 不使用常见单词或容易猜测的模式
+   - 建议使用密码生成器生成随机密码
+
+2. **密码管理**
+   - 使用密码管理器存储密码
+   - 不要在命令历史中保留密码
+   - 定期更新密码（建议每 90 天）
+   - 不同用户使用不同的密码
+
+### 访问控制
+
+3. **最小权限原则**
+   - 只授予用户必要的权限
+   - 避免创建过多的管理员账户
+   - 定期审查用户权限，移除不需要的权限
+
+4. **用户管理**
+   - 及时删除离职人员的账户
+   - 为临时访问创建专用账户，使用后及时删除
+   - 使用描述性的用户名，便于识别和管理
+
+### 网络安全
+
+5. **HTTPS**
+   - 在生产环境中必须使用 HTTPS
+   - 使用有效的 SSL/TLS 证书
+   - 定期更新证书
+
+6. **防火墙和网络隔离**
+   - 限制对 Registry 端口的访问
+   - 使用 VPN 或内网访问
+   - 配置 IP 白名单（如果可能）
+
+### 数据安全
+
+7. **备份**
+   - 定期备份配置文件和镜像数据
+   - 验证备份的完整性
+   - 将备份存储在安全的位置
+
+8. **审计日志**
+   - 启用访问日志记录
+   - 定期检查异常访问行为
+   - 保留日志至少 90 天
+
+### 容器安全
+
+9. **镜像安全**
+   - 只推送经过验证的镜像
+   - 定期扫描镜像漏洞
+   - 使用镜像签名验证镜像完整性
+
+10. **运行时安全**
+    - 使用最小权限运行容器
+    - 不在容器中存储敏感信息
+    - 定期更新容器和依赖
 
 ## 生产环境部署
 

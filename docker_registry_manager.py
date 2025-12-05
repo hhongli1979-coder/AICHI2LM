@@ -365,12 +365,12 @@ def main():
     # 创建管理器实例
     manager = DockerRegistryManager()
     
-    # 添加管理员用户
-    manager.add_user("admin", "admin123", [Permission.ADMIN.value], "admin@example.com")
+    # 添加管理员用户 (请使用强密码)
+    manager.add_user("admin", "YOUR_STRONG_PASSWORD_HERE", [Permission.ADMIN.value], "admin@example.com")
     
-    # 添加普通用户
-    manager.add_user("user1", "pass123", [Permission.VIEW.value, Permission.PULL.value], "user1@example.com")
-    manager.add_user("user2", "pass456", [Permission.VIEW.value, Permission.PULL.value], "user2@example.com")
+    # 添加普通用户 (请使用强密码)
+    manager.add_user("user1", "YOUR_PASSWORD_HERE", [Permission.VIEW.value, Permission.PULL.value], "user1@example.com")
+    manager.add_user("user2", "YOUR_PASSWORD_HERE", [Permission.VIEW.value, Permission.PULL.value], "user2@example.com")
     
     # 注册镜像
     manager.register_image("telechat", "7b-fp16", allowed_users=["user1"])

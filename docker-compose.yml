@@ -37,7 +37,6 @@ services:
       - CATALOG_MIN_BRANCHES=1
       - CATALOG_MAX_BRANCHES=1
       - TAGLIST_PAGE_SIZE=100
-      - REGISTRY_SECURED=false
       - CATALOG_ELEMENTS_LIMIT=1000
     depends_on:
       - registry

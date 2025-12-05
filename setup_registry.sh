@@ -51,9 +51,15 @@ echo "=== 初始化管理员用户 ==="
 read -p "请输入管理员用户名 (默认: admin): " admin_user
 admin_user=${admin_user:-admin}
 
-read -sp "请输入管理员密码 (默认: admin123): " admin_pass
+read -sp "请输入管理员密码 (留空将生成随机密码): " admin_pass
 echo ""
-admin_pass=${admin_pass:-admin123}
+
+# 如果未提供密码，生成一个强随机密码
+if [ -z "$admin_pass" ]; then
+    admin_pass=$(openssl rand -base64 16 | tr -d "=+/" | cut -c1-16)
+    echo "已生成随机密码: $admin_pass"
+    echo "请妥善保存此密码！"
+fi
 
 # 使用 Python CLI 工具创建管理员用户
 echo "创建管理员用户..."

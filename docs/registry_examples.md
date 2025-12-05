@@ -144,17 +144,17 @@ python3 registry_cli.py image register telechat-private 12b-fp16 --users admin,s
 为不同角色创建不同权限的用户：
 
 ```bash
-# 管理员 - 所有权限
-python3 registry_cli.py user add admin pass123 --permissions admin
+# 管理员 - 所有权限 (使用强密码)
+python3 registry_cli.py user add admin <STRONG_PASSWORD> --permissions admin
 
-# 开发者 - 可以推送和拉取
-python3 registry_cli.py user add developer pass123 --permissions view,pull,push
+# 开发者 - 可以推送和拉取 (使用强密码)
+python3 registry_cli.py user add developer <STRONG_PASSWORD> --permissions view,pull,push
 
-# 测试人员 - 只能拉取
-python3 registry_cli.py user add tester pass123 --permissions view,pull
+# 测试人员 - 只能拉取 (使用强密码)
+python3 registry_cli.py user add tester <STRONG_PASSWORD> --permissions view,pull
 
-# 只读用户 - 只能查看
-python3 registry_cli.py user add viewer pass123 --permissions view
+# 只读用户 - 只能查看 (使用强密码)
+python3 registry_cli.py user add viewer <STRONG_PASSWORD> --permissions view
 ```
 
 ## 常见场景
@@ -164,9 +164,9 @@ python3 registry_cli.py user add viewer pass123 --permissions view
 团队有多个开发人员，需要共享 Docker 镜像：
 
 ```bash
-# 添加团队成员
-python3 registry_cli.py user add alice pass1 --permissions view,pull,push
-python3 registry_cli.py user add bob pass2 --permissions view,pull,push
+# 添加团队成员 (使用强密码)
+python3 registry_cli.py user add alice <ALICE_PASSWORD> --permissions view,pull,push
+python3 registry_cli.py user add bob <BOB_PASSWORD> --permissions view,pull,push
 
 # 注册共享镜像（所有团队成员可访问）
 python3 registry_cli.py image register team-project latest
@@ -180,14 +180,16 @@ python3 registry_cli.py image register team-project-private dev --users alice
 CI/CD 系统需要自动构建和推送镜像：
 
 ```bash
-# 创建 CI/CD 服务账号
-python3 registry_cli.py user add ci-bot ci-token-123 --permissions view,pull,push
+# 创建 CI/CD 服务账号 (使用强令牌)
+python3 registry_cli.py user add ci-bot <SECURE_TOKEN> --permissions view,pull,push
 
 # 在 CI/CD 脚本中使用
-docker login localhost:5000 -u ci-bot -p ci-token-123
+docker login localhost:5000 -u ci-bot -p $CI_BOT_TOKEN
 docker build -t localhost:5000/telechat:latest .
 docker push localhost:5000/telechat:latest
 ```
+
+**注意:** 在生产环境中，应该使用环境变量或密钥管理系统存储凭据，而不是硬编码在脚本中。
 
 ### 场景 3: 多环境部署
 
