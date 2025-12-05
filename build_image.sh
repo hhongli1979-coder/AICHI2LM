@@ -84,9 +84,19 @@ if [[ "$push_confirm" =~ ^[Yy]$ ]]; then
     echo "=== 推送完成! ==="
     echo ""
     echo "注册镜像到访问控制系统..."
-    python3 registry_cli.py image register "${IMAGE_NAME}" "${MODEL_VERSION}" \
-        --size "$(docker image inspect ${TAG} --format='{{.Size}}')" \
-        --created "$(docker image inspect ${TAG} --format='{{.Created}}')"
+    
+    # 获取镜像大小和创建时间
+    IMAGE_SIZE=$(docker image inspect "${TAG}" --format='{{.Size}}' 2>/dev/null || echo "0")
+    IMAGE_CREATED=$(docker image inspect "${TAG}" --format='{{.Created}}' 2>/dev/null || echo "")
+    
+    if [ -n "$IMAGE_SIZE" ] && [ "$IMAGE_SIZE" != "0" ]; then
+        python3 registry_cli.py image register "${IMAGE_NAME}" "${MODEL_VERSION}" \
+            --size "$IMAGE_SIZE" \
+            --created "$IMAGE_CREATED"
+    else
+        echo "警告: 无法获取镜像元数据，跳过自动注册"
+        echo "请手动注册镜像: python3 registry_cli.py image register ${IMAGE_NAME} ${MODEL_VERSION}"
+    fi
     
     echo ""
     echo "镜像已推送并注册。"

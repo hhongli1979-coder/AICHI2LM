@@ -369,8 +369,8 @@ def main():
     
     # 从环境变量读取密码或使用占位符
     admin_password = os.environ.get('ADMIN_PASSWORD', 'YOUR_STRONG_PASSWORD_HERE')
-    user1_password = os.environ.get('USER1_PASSWORD', 'YOUR_PASSWORD_HERE')
-    user2_password = os.environ.get('USER2_PASSWORD', 'YOUR_PASSWORD_HERE')
+    user1_password = os.environ.get('USER1_PASSWORD', 'YOUR_STRONG_PASSWORD_HERE')
+    user2_password = os.environ.get('USER2_PASSWORD', 'YOUR_STRONG_PASSWORD_HERE')
     
     # 添加管理员用户
     manager.add_user("admin", admin_password, [Permission.ADMIN.value], "admin@example.com")

@@ -50,8 +50,8 @@ docker login localhost:5000
 ### 步骤 4: 添加第一个用户
 
 ```bash
-# 添加开发者用户
-python3 registry_cli.py user add developer <PASSWORD> --permissions view,pull,push
+# 添加开发者用户 (使用强密码)
+python3 registry_cli.py user add developer <STRONG_PASSWORD> --permissions view,pull,push
 
 # 验证用户列表
 python3 registry_cli.py user list
