@@ -1,0 +1,36 @@
+version: '3.8'
+
+# 开发环境配置 - 不包括 Nginx，直接暴露端口
+services:
+  telechat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: telechat:dev
+    container_name: telechat-dev
+    restart: unless-stopped
+    ports:
+      - "8070:8070"
+      - "8501:8501"
+    volumes:
+      - ./models:/app/models:ro
+      - ./logs:/app/logs
+      - ./service:/app/service  # 开发模式下挂载代码，支持热更新
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - MODEL_PATH=/app/models/7B
+      - API_PORT=8070
+      - WEB_PORT=8501
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - telechat-network
+
+networks:
+  telechat-network:
+    driver: bridge
