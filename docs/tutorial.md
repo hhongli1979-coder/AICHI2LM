@@ -78,6 +78,169 @@ gpu_devices: '0'
 
 ---
 
+## 环境准备与依赖安装
+
+### 系统要求
+
+在开始之前，请确保您的系统满足以下要求：
+
+**硬件要求**:
+- GPU: NVIDIA GPU with CUDA support (推荐8GB+显存用于推理，40GB+用于训练)
+- 内存: 32GB+ RAM
+- 存储: 50GB+可用磁盘空间
+
+**软件要求**:
+- 操作系统: Linux (Ubuntu 18.04+推荐) / macOS / Windows 10/11
+- Python: 3.8, 3.9, 或 3.10
+- CUDA: 11.6+ (如果使用GPU)
+- Git & Git LFS
+
+### 本地环境安装
+
+#### 1. 创建Python虚拟环境
+
+强烈建议使用虚拟环境来隔离依赖：
+
+```bash
+# 方式1: 使用conda (推荐)
+conda create -n telechat python=3.9
+conda activate telechat
+
+# 方式2: 使用venv
+python3 -m venv telechat_env
+source telechat_env/bin/activate  # Linux/Mac
+# telechat_env\Scripts\activate  # Windows
+```
+
+#### 2. 安装PyTorch
+
+根据您的CUDA版本选择合适的PyTorch版本：
+
+```bash
+# 查看CUDA版本
+nvcc --version
+
+# CUDA 11.7
+pip install torch==1.13.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
+
+# CUDA 11.8  
+pip install torch==2.0.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+
+# CPU版本 (仅用于推理测试，不推荐训练)
+pip install torch==1.13.1
+```
+
+详细版本对照请参考: [PyTorch官网](https://pytorch.org/get-started/locally/)
+
+#### 3. 克隆代码仓库
+
+```bash
+git clone https://github.com/Tele-AI/TeleChat.git
+cd TeleChat
+```
+
+#### 4. 安装项目依赖
+
+```bash
+# 安装所有依赖
+pip install -r requirements.txt
+```
+
+主要依赖包括：
+- `transformers==4.30.0`: Hugging Face模型库
+- `deepspeed==0.8.3`: 分布式训练框架
+- `accelerate>=0.24.1`: 训练加速库
+- `fastapi>=0.109.1`: API服务框架
+- `streamlit>=1.30.0`: Web界面框架
+- `auto-gptq==0.3.0`: 量化工具
+
+#### 5. 安装FlashAttention2 (可选但推荐)
+
+FlashAttention2可以显著提升训练和推理速度：
+
+```bash
+pip install flash-attn --no-build-isolation
+```
+
+**注意事项**:
+- FlashAttention2需要编译，可能需要10-30分钟
+- 需要安装CUDA开发工具包
+- 如果安装失败，可以跳过，模型会自动降级到标准注意力机制
+
+#### 6. 验证安装
+
+```bash
+# 验证PyTorch和CUDA
+python -c "import torch; print(f'PyTorch: {torch.__version__}'); print(f'CUDA: {torch.cuda.is_available()}')"
+
+# 验证transformers
+python -c "import transformers; print(f'Transformers: {transformers.__version__}')"
+
+# 验证deepspeed
+python -c "import deepspeed; print(f'DeepSpeed: {deepspeed.__version__}')"
+```
+
+预期输出示例：
+```
+PyTorch: 1.13.1+cu117
+CUDA: True
+Transformers: 4.30.0
+DeepSpeed: 0.8.3
+```
+
+### 常见安装问题
+
+#### 问题1: CUDA版本不匹配
+
+**错误信息**: `RuntimeError: CUDA error: no kernel image is available`
+
+**解决方案**:
+```bash
+# 检查CUDA版本
+nvcc --version
+
+# 重新安装匹配的PyTorch版本
+pip uninstall torch
+pip install torch==1.13.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
+```
+
+#### 问题2: FlashAttention2编译失败
+
+**错误信息**: 编译过程中出现各种错误
+
+**解决方案**:
+- 确保安装了CUDA开发工具: `sudo apt-get install cuda-toolkit`
+- 尝试使用预编译wheel: 在[这里](https://github.com/Dao-AILab/flash-attention/releases)下载
+- 如果仍然失败，可以跳过FlashAttention2，使用标准注意力机制
+
+#### 问题3: 显存不足
+
+**错误信息**: `CUDA out of memory`
+
+**解决方案**:
+- 使用量化模型 (int8/int4)
+- 降低batch size
+- 使用gradient checkpointing
+- 启用CPU offload
+
+#### 问题4: Windows系统安装问题
+
+**常见问题**: 某些包无法编译
+
+**解决方案**:
+```bash
+# 1. 安装Microsoft C++ Build Tools
+# 下载: https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
+# 2. 使用Anaconda替代pip
+conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+
+# 3. 考虑使用WSL2
+wsl --install
+```
+
+---
+
 ## 资源获取
 
 
