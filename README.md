@@ -59,10 +59,10 @@ source telechat_env/bin/activate  # Linux/Mac
 根据您的CUDA版本安装对应的PyTorch：
 
 ```bash
-# CUDA 11.8
+# CUDA 11.7
 pip install torch==1.13.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
 
-# CUDA 12.1
+# CUDA 11.8
 pip install torch==2.0.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
 
 # CPU版本（仅推理，不推荐用于训练）
