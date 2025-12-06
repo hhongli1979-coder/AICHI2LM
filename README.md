@@ -59,15 +59,20 @@ source telechat_env/bin/activate  # Linux/Mac
 根据您的CUDA版本安装对应的PyTorch：
 
 ```bash
-# CUDA 11.7
+# CUDA 11.7 (推荐，与requirements.txt中torch==1.13.1匹配)
 pip install torch==1.13.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
 
-# CUDA 11.8
+# CUDA 11.8 (需要使用PyTorch 2.0+以支持该CUDA版本)
 pip install torch==2.0.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
 
 # CPU版本（仅推理，不推荐用于训练）
 pip install torch==1.13.1
 ```
+
+**注意**: 
+- 不同CUDA版本需要不同的PyTorch版本
+- 更多CUDA版本（11.6、12.1等）的安装命令请参考 [INSTALL.md](./INSTALL.md)
+- 详细的版本对照请参考 [PyTorch官网](https://pytorch.org/get-started/locally/)
 
 #### 3. 安装TeleChat依赖
 

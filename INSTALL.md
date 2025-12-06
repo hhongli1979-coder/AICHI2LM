@@ -169,7 +169,7 @@ ls -la
 # 安装基础依赖
 pip install -r requirements.txt
 
-# 如果安装过程中遇到问题，可以尝试逐个安装
+# 如果安装过程中遇到问题，可以尝试逐个安装核心依赖
 pip install accelerate>=0.24.1
 pip install auto-gptq==0.3.0
 pip install deepspeed==0.8.3
@@ -184,9 +184,11 @@ pip install streamlit>=1.30.0
 pip install pyyaml>=6.0
 pip install psutil>=5.9.0
 pip install requests>=2.28.0
+
+# 注意: flash-attn 是可选依赖，在下一步单独安装
 ```
 
-### 6. 安装FlashAttention2 (可选)
+### 6. 安装FlashAttention2 (可选但推荐)
 
 FlashAttention2可以显著提升性能，但安装较为复杂：
 
