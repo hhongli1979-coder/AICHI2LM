@@ -122,15 +122,19 @@ source telechat_env/bin/activate  # Linux/Mac
 # 查看CUDA版本
 nvcc --version
 
-# CUDA 11.7
+# CUDA 11.7 (推荐，与requirements.txt匹配)
 pip install torch==1.13.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
 
-# CUDA 11.8  
+# CUDA 11.8 (需要PyTorch 2.0+)
 pip install torch==2.0.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
 
 # CPU版本 (仅用于推理测试，不推荐训练)
 pip install torch==1.13.1
 ```
+
+**重要提示**: 
+- requirements.txt中指定torch==1.13.1，推荐使用CUDA 11.7以确保版本一致
+- 如果使用CUDA 11.8+，需要PyTorch 2.0+，会自动升级torch版本，可能需要调整其他依赖
 
 详细版本对照请参考: [PyTorch官网](https://pytorch.org/get-started/locally/)
 

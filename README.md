@@ -70,7 +70,8 @@ pip install torch==1.13.1
 ```
 
 **注意**: 
-- 不同CUDA版本需要不同的PyTorch版本
+- **推荐使用CUDA 11.7**: 与requirements.txt中指定的torch==1.13.1完全匹配
+- 如使用CUDA 11.8或更高版本，需要PyTorch 2.0+，安装时会自动升级torch版本
 - 更多CUDA版本（11.6、12.1等）的安装命令请参考 [INSTALL.md](./INSTALL.md)
 - 详细的版本对照请参考 [PyTorch官网](https://pytorch.org/get-started/locally/)
 
