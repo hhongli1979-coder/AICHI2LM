@@ -1,3 +1,29 @@
+# 🚀 TeleChat Docker 快速部署
+
+> **📖 [查看快速开始指南 (QUICK_START.md)](./QUICK_START.md)** - 5分钟完成部署！
+
+## 三步启动
+
+```bash
+# 1. 克隆项目
+cd /www/wwwroot
+git clone https://github.com/hhongli1979-coder/AICHI2LM.git
+cd AICHI2LM
+
+# 2. 准备模型
+mkdir -p models/7B
+# 复制模型文件到 models/7B/
+
+# 3. 启动服务
+docker compose up -d
+```
+
+**访问**: http://localhost:8070/docs (API) | http://localhost:8501 (Web)
+
+**详细安装文档**: [QUICK_START.md](./QUICK_START.md) | [命令.txt](./命令.txt) | [DOCKER.md](./DOCKER.md)
+
+---
+
 理解问题和存储库结构清单项
 了解问题和存储库结构
 为高级人工智能技术集成（前沿智能技术集成）清单项创建文档文件
@@ -179,6 +205,30 @@ deploy.bat
 - Web界面: http://localhost:8501
 
 更多配置选项请参考：[**tutorial**](./docs/tutorial.md)
+
+#### 🐳 Docker 部署
+
+**安装命令（复制执行）：**
+
+```bash
+# 1. 安装 Docker
+curl -fsSL https://get.docker.com | sudo sh
+sudo usermod -aG docker $USER && newgrp docker
+
+# 2. 安装 GPU 支持
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg && distribution=$(. /etc/os-release;echo $ID$VERSION_ID) && curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list && sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit && sudo systemctl restart docker
+
+# 3. 克隆项目并启动
+git clone https://github.com/hhongli1979-coder/AICHI2LM.git
+cd AICHI2LM
+mkdir -p models/7B
+# 把模型文件放到 models/7B 目录
+docker compose up -d
+```
+
+**访问：** http://localhost:8070/docs (API) | http://localhost:8501 (Web)
+
+更多选项：[命令.txt](./命令.txt) | [INSTALL_STEPS.md](./INSTALL_STEPS.md) | [DOCKER.md](./DOCKER.md)
 
 #### 传统部署方式
 
