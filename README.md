@@ -173,7 +173,7 @@ python -c "import torch; print(f'PyTorch version: {torch.__version__}'); print(f
 
 期望输出：
 ```
-PyTorch version: 1.13.1
+PyTorch version: 1.13.1+cu117
 CUDA available: True
 ```
 
