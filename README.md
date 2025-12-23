@@ -159,6 +159,16 @@ TeleChat模型相比同规模模型在评测效果方面也有较好的表现，
 
 说明：CMMLU、AGIEval、GAOKAO、CSL、CHID、EPRSTMT均基于[OpenCompass](https://github.com/open-compass/OpenCompass/)平台提供的评测方法进行评估，而对于对比模型，我们同时参考了官方汇报结果和OpenCompass结果。我们使用了自己的评测脚本评测MMLU与CEVAL榜单，具体方法见`evaluation/`文件夹。
 
+# 常用命令参考
+
+📚 **[查看完整命令参考文档 →](./COMMANDS.md)**
+
+快速开始常用命令：
+- **一键部署**: `python deploy.py`
+- **模型推理**: 查看 [COMMANDS.md](./COMMANDS.md#模型推理)
+- **模型训练**: 查看 [COMMANDS.md](./COMMANDS.md#模型训练)
+- **模型量化**: 查看 [COMMANDS.md](./COMMANDS.md#模型量化)
+
 # 模型推理和部署
 ### 模型推理
 当前模型推理兼容了单卡和多卡推理，以及针对长文推理做了部分优化工作。具体推理操作请参考：[**tutorial**](./docs/tutorial.md)
